@@ -8,7 +8,6 @@ const App =()=> {
       <BrowserRouter>
         <CssBaseline />
         <Routes>
-          debugger
           <Route element={<Layout />} />
         </Routes>
       </BrowserRouter>
