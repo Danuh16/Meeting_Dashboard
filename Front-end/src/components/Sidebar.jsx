@@ -3,17 +3,15 @@ import {
   Box,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Radio,
   Typography,
-  useTheme,
 } from "@mui/material";
 import {
-  ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
   WorkOutlined,
@@ -23,17 +21,12 @@ import {
   PeopleOutlined,
   PlaceOutlined,
   FolderOpenOutlined,
-  MeetingOutlined
+  MeetingRoomOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
-
-
-
-
-
-
+import { RadioGroup, FormControlLabel } from "@mui/material";
 
 const navItems = [
   {
@@ -57,7 +50,7 @@ const navItems = [
     icon: <CheckBoxOutlined />,
   },
   {
-    text: "Calender",
+    text: "Calendar",
     icon: <CalendarMonthOutlined />,
   },
   {
@@ -82,111 +75,114 @@ const navItems = [
   },
   {
     text: "Business",
-    icon: null,
+    type: "radio",
   },
   {
     text: "Working",
-    icon:null ,
+    type: "radio",
   },
   {
     text: "Management",
-    icon: null,
+    type: "radio",
   },
 ];
 
-
-
-const Sidebar = ({
-  user,
-  drawerWidth,
-  isSidebarOpen,
-  setIsSidebarOpen,
-  isNonMobile,
-}) => {
+const Sidebar = ({ user, drawerWidth, isNonMobile }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
-  const theme = useTheme();
 
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
 
+  const handleRadioChange = (event) => {
+    const selectedText = event.target.value.toLowerCase();
+    navigate(`/${selectedText}`);
+    setActive(selectedText);
+  };
+
   return (
     <Box component="nav">
-      {isSidebarOpen && (
-        <Drawer
-          open={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          variant="persistent"
-          anchor="left"
-          sx={{
+      <Drawer
+        open
+        variant="persistent"
+        anchor="left"
+        sx={{
+          width: drawerWidth,
+          "& .MuiDrawer-paper": {
+            backgroundColor: "blue",
+            color: "white",
+            boxSizing: "border-box",
+            borderWidth: isNonMobile ? 0 : "2px",
             width: drawerWidth,
-            "& .MuiDrawer-paper": {
-              backgroundColor: "blue",
-              boxSixing: "border-box",
-              borderWidth: isNonMobile ? 0 : "2px",
-              width: drawerWidth,
-            },
-          }}
-        >
-          <Box width="100%">
-            <Box m="1.5rem 2rem 2rem 3rem">
-              <FlexBetween color={"white"}>
-                <Box display="flex" alignItems="center" gap="0.5rem">
-                  <Box
-                    icon="MeetingOutlined"
-                  />
-                  <Typography variant="h4" fontWeight="bold">
-                    Meets
+          },
+        }}
+      >
+        <Box width="100%">
+          <Box m="1.5rem 2rem 2rem 3rem">
+            <FlexBetween color={"white"}>
+              <Box display="flex" alignItems="center" gap="0.5rem">
+                <MeetingRoomOutlined />
+                <Typography variant="h4" fontWeight="bold">
+                  Meets
+                </Typography>
+              </Box>
+            </FlexBetween>
+          </Box>
+          <List>
+            {navItems.map(({ text, icon, type }) => {
+              if (!icon) {
+                return (
+                  <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
+                    {text}
                   </Typography>
-                </Box>
-                {!isNonMobile && (
-                  <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                    <ChevronLeft />
-                  </IconButton>
-                )}
-              </FlexBetween>
-            </Box>
-            <List>
-              {navItems.map(({ text, icon }) => {
-                if (!icon) {
-                  return (
-                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
-                      {text}
-                    </Typography>
-                  );
-                }
+                );
+              }
+              if (type === "radio") {
                 const lcText = text.toLowerCase();
-
                 return (
                   <ListItem key={text} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(`/${lcText}`);
-                        setActive(lcText);
-                      }}
+                    <RadioGroup
+                      value={active}
+                      onChange={handleRadioChange}
+                      sx={{ display: "flex", flexDirection: "row" }}
+                    >
+                      <FormControlLabel
+                        value={lcText}
+                        control={<Radio />}
+                        label={text}
+                        sx={{
+                          color: active === lcText ? "blue" : "white",
+                          "& .MuiRadio-root": {
+                            color: active === lcText ? "blue" : "white",
+                          },
+                        }}
+                      />
+                    </RadioGroup>
+                  </ListItem>
+                );
+              }
+              const lcText = text.toLowerCase();
+              return (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton
+                    onClick={() => {
+                      navigate(`/${lcText}`);
+                      setActive(lcText);
+                    }}
+                    sx={{
+                      backgroundColor: active === lcText ? "white" : "transparent",
+                      color: active === lcText ? "blue" : "white",
+                    }}
+                  >
+                    <ListItemIcon
                       sx={{
-                        backgroundColor:
-                          active === lcText
-                            ? theme.palette.secondary[500]
-                            : "transparent",
-                        color:
-                          active === lcText
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
+                        ml: "2rem",
+                        color: active === lcText ? "blue" : "white",
                       }}
                     >
-                      <ListItemIcon
-                        sx={{
-                          ml: "2rem",
-                          color:
-                            active === lcText
-                              ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
-                        }}
-                      >
-                        {icon}
+                      {icon}
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === lcText && (
@@ -197,30 +193,25 @@ const Sidebar = ({
                 );
               })}
             </List>
-          </Box>
-
-          <Box position="absolute" bottom="2rem">
-            <Divider />
-            <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.9rem"
-                  sx={{ color: theme.palette.secondary[100] }}
-                >
-                  {user.name}
-                </Typography>
-                <Typography
-                  fontSize="0.8rem"
-                  sx={{ color: theme.palette.secondary[200] }}
-                >
-                  {user.occupation}
-                </Typography>
-              </Box>
-            </FlexBetween>
-          </Box>
-        </Drawer>
-      )}
+        </Box>
+        <Box position="absolute" bottom="2rem">
+          <Divider />
+          <FlexBetween textTransform="none" gap="1rem" m="1.5rem 2rem 0 3rem">
+            <Box textAlign="left">
+              <Typography
+                fontWeight="bold"
+                fontSize="0.9rem"
+                sx={{ color: "white" }}
+              >
+                {user.name}
+              </Typography>
+              <Typography fontSize="0.8rem" sx={{ color: "white" }}>
+                {user.occupation}
+              </Typography>
+            </Box>
+          </FlexBetween>
+        </Box>
+      </Drawer>
     </Box>
   );
 };
