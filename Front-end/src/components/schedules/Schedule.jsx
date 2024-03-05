@@ -20,8 +20,8 @@ const Schedule = () => {
           <span className="py-4 p-[0.09rem]  rounded-l-xl bg-yellow-600/50 mr-2"></span>
           Wireframes
         </h2>
-        <h2 className="bg-white  pr-10 py-4 text-[#be22fa]  text-lg rounded-xl font-semibold">
-          <span className="py-5 p-1  rounded-l-xl bg-[#be22fa] mr-2"></span>Team
+        <h2 className="bg-white  pr-10 py-4 text-[#c743fa]  text-lg rounded-xl font-semibold">
+          <span className="py-5 p-1  rounded-l-xl bg-[#c743fa] mr-2"></span>Team
           Management
         </h2>
         <h2 className="bg-white p-4 px-10 text-gray-500 text-lg rounded-xl">
