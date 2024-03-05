@@ -107,7 +107,7 @@ const Chart = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col-reverse absolute top-[10.2rem] left-[22rem] gap-4 font-mono text-gray-500">
+        <div className="flex flex-col-reverse absolute z-20 top-[10.2rem] left-[22rem] gap-4 font-mono text-gray-500">
           {" "}
           2 PM
           {Array.from({ length: 13 }).map((_, index) => (

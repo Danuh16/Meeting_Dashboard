@@ -4,7 +4,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { IoCalendarOutline } from "react-icons/io5";
 
 const Calendar = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(
+    setDate(setMonth(setYear(new Date(), 2024), 4), 24)
+  );
   const [currentMonth, setCurrentMonth] = useState(
     setYear(setMonth(new Date(), 4), 2023)
   );
@@ -12,7 +14,6 @@ const Calendar = () => {
   const handleDateClick = (date) => {
     setSelectedDate(date);
   };
-
   const handlePrevMonth = () => {
     setCurrentMonth((prevMonth) => addDays(prevMonth, -30));
   };
@@ -28,7 +29,9 @@ const Calendar = () => {
     for (let i = 0; i < 12; i++) {
       const date = addDays(startDate, i);
       const isSelected =
-        selectedDate && date.toDateString() === selectedDate.toDateString();
+        selectedDate &&
+        date.getMonth() === selectedDate.getMonth() &&
+        date.getDate() === selectedDate.getDate();
 
       days.push(
         <div
