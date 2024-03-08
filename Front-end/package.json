@@ -1,4 +1,4 @@
-{
+{ "home": ".",
   "name": "room",
   "version": "0.1.0",
   "private": true,
@@ -47,5 +47,9 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.1"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "tailwind.config.js",
+  "author": "",
+  "license": "ISC"
 }
