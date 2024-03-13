@@ -9,3 +9,12 @@
   font-weight: 700;
   font-style: normal;
 }
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+  .grid-cols-7 {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}

@@ -13,10 +13,10 @@ import CalenderHeader from "./calender/CalenderHeader";
 
 const MysideBar = () => {
   return (
-    <div className="container   items-center">
-      <div className=" flex md:w-[100%]">
-        <div className="  bg-blue-900 w-[15%] min-h-screen">
-          <div className=" flex items-center justify-center gap-4">
+    <div className="container items-center">
+      <div className="flex flex-col md:flex-row">
+        <div className="bg-[#07522A] w-full md:w-1/5 min-h-screen">
+          <div className="flex items-center justify-center gap-4">
             <svg
               fill="#ffffff"
               version="1.1"
@@ -62,11 +62,11 @@ const MysideBar = () => {
                 <rect x="38.8" y="70.8" width="50.6" height="6"></rect>{" "}
               </g>
             </svg>{" "}
-            <h1 className="text-white text-[150%] kode-mono mt-3">Meets</h1>
+            <h1 className="text-[#ECAB22] text-[150%] kode-mono mt-3">Global Meets</h1>
           </div>
           <div className="container flex flex-col gap-5 font-mono">
-            <div className="text-white/85 text-[0.95rem] flex flex-col gap-4 ml-[15%] pt-[20%]">
-              <h2 className="text-white/85 ">Main</h2>
+            <div className="text-[#ECAB22] text-[0.95rem] flex flex-col gap-4 ml-[15%] pt-[20%]">
+              <h2 className="text-[#ECAB22]">Main</h2>
               <div className="flex items-center gap-3 ">
                 <FaHome /> <a href="http://">Home</a>
               </div>
@@ -83,8 +83,8 @@ const MysideBar = () => {
                 <FiCalendar /> <a href="http://">Calender</a>
               </div>
             </div>
-            <div className="text-white/85 flex text-[0.95rem] flex-col gap-4 ml-[15%] pt-[15%]">
-              <h2 className="text-white/85 ">Admin</h2>
+            <div className="text-[#ECAB22] flex text-[0.95rem] flex-col gap-4 ml-[15%] pt-[15%]">
+              <h2 className="text-[#ECAB22]">Admin</h2>
               <div className="flex items-center gap-3 ">
                 <FiUsers /> <a href="http://">Users</a>
               </div>
@@ -95,44 +95,41 @@ const MysideBar = () => {
                 <FiFolder /> <a href="http://">Job Boards</a>
               </div>
             </div>
-            <div className="text-white/85 text-[0.95rem] flex flex-col gap-4 ml-[15%] pt-[15%] font-mono">
-              <h2 className="text-white/85 ">Categories</h2>
+            <div className="text-[#ECAB22] text-[0.95rem] flex flex-col gap-4 ml-[15%] pt-[15%] font-mono">
+              <h2 className="text-[#ECAB22]">Categories</h2>
               <div className="flex items-center gap-3 ">
                 <input
                   type="radio"
-                  className="h-4 w-4 border-blue-500 text-blue-500 focus:ring-blue-500"
-                  checked
+                  className="h-4 w-4 border-[#ECAB22] text-[#ECAB22] focus:ring-[#ECAB22]"
                 />{" "}
                 <a href="http://">Business</a>
               </div>
               <div className="flex items-center gap-3">
                 <input
                   type="radio"
-                  className="h-4 w-4 border-yellow-500 focus:ring-yellow-500"
+                  className="h-4 w-4 border-[#ECAB22] focus:ring-[#ECAB22]"
                 />{" "}
                 <a href="http://">Working</a>
               </div>
               <div className="flex items-center gap-3 ">
                 <input
                   type="radio"
-                  className="h-4 w-4 border-red-600 focus:ring-red-600"
+                  className="h-4 w-4 border-[#ECAB22] focus:ring-[#ECAB22]"
                 />{" "}
                 <a href="http://">Management</a>
               </div>
             </div>
-            <div className="text-white/85  flex items-center gap-3 mt-[15rem] ml-[15%]  pt-[10%] font-mono">
+            <div className="text-[#ECAB22] flex items-center gap-3 mt-[15rem] ml-[15%] pt-[10%] font-mono">
               <FiLogOut style={{ width: "12%", height: "12%" }} />{" "}
               <a href="http://">Sign Out</a>
             </div>
           </div>
         </div>
-        <div className="bg-blue-100/60 w-[88%] overflow-hidden">
+        <div className="bg-blue-100/60 w-full md:w-4/5 overflow-hidden">
           <CalenderHeader />
         </div>
-        
       </div>
-      
-      </div>
+    </div>
   );
 };
 
