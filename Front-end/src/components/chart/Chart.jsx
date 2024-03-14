@@ -273,8 +273,8 @@ const Chart = ({ startTime, endTime }) => {
   };
 
   return (
-    <div className="container flex rounded-lg mx-auto px-[-5rem] bg-white items-center">
-      <div className="flex relative px-[2rem] pl-16 gap-16">
+    <div className="container flex rounded-lg mx-auto px-4 md:px-0 bg-white items-center">
+      <div className="flex relative px-4 md:pl-16 gap-4 md:gap-16">
         {renderTimeSlot(startTime, endTime, "green", [img1, img2])}
         {renderTimeSlot(startTime, endTime, "red", [img1, img2])}
         {renderTimeSlot(startTime, endTime, "blue", [img1, img2])}

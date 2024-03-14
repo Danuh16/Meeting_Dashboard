@@ -3,12 +3,12 @@ import { FaHome } from "react-icons/fa";
 import { RiUserLine } from "react-icons/ri";
 import { FiFile } from "react-icons/fi";
 import AddAttachment from "../schedules/AddAttachement";
-import AddAttendee from "../schedules/AddAttandee";
+import AddAttandee from "../schedules/AddAttandee";
 import AddRoom from "../schedules/AddRoom";
 
 const QuickActions = () => {
   const [showAddAttachment, setShowAddAttachment] = useState(false);
-  const [showAddAttendee, setShowAddAttendee] = useState(false);
+  const [showAddAttandee, setShowAddAttandee] = useState(false);
   const [showAddRoom, setShowAddRoom] = useState(false);
 
   const handleAddAttachment = () => {
@@ -19,12 +19,12 @@ const QuickActions = () => {
     setShowAddAttachment(false);
   };
 
-  const handleAddAttendee = () => {
-    setShowAddAttendee(true);
+  const handleAddAttandee = () => {
+    setShowAddAttandee(true);
   };
 
-  const handleCloseAddAttendee = () => {
-    setShowAddAttendee(false);
+  const handleCloseAddAttandee = () => {
+    setShowAddAttandee(false);
   };
 
   const handleAddRoom = () => {
@@ -55,12 +55,12 @@ const QuickActions = () => {
           )}
           <button
             className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2"
-            onClick={handleAddAttendee}
+            onClick={handleAddAttandee}
           >
             <RiUserLine className="mt-1 text-2xl" /> Attendee
           </button>
-          {showAddAttendee && (
-            <AddAttendee onCloseAddAttendee={handleCloseAddAttendee} />
+          {showAddAttandee && (
+            <AddAttandee onCloseAddAttandee={handleCloseAddAttandee} />
           )}
           <button
             className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2"

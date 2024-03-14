@@ -15,7 +15,7 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
               X
             </button>
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
-              Add Attendee
+              Add Attndee
             </h2>
             <form>
               <div className="mb-4">
@@ -36,7 +36,12 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
                   <option value="">Team Management</option>
                 </select>
               </div>
-
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                  Email
+                </label>
+                <input id="email" type="email" className="border border-[#07522A] rounded w-full py-2 px-3" />
+              </div>
               <div className="flex justify-end">
                 <button
                   type="submit"
