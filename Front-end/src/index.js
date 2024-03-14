@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
+import MysideBar from './components/MysideBar';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MysideBar />
   </React.StrictMode>,
   document.getElementById('root')
 );

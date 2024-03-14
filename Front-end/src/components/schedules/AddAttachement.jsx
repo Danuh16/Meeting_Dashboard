@@ -2,6 +2,22 @@ import React,{useState} from "react";
 
 const AddAttachment = ({ onCloseAddAttachment }) => {
   const [showModal, setShowModal] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (selectedFile) {
+      console.log('Selected file:', selectedFile);
+    } else {
+      console.log('No file selected');
+    }
+  };
 
 
   const handleCloseModal = () => {
@@ -23,7 +39,7 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
               Add Attachment
             </h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
@@ -42,7 +58,15 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                   <option value="">Team Management</option>
                 </select>
               </div>
-
+               <div className="div">
+               <label
+                  htmlFor="File"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
+                  File
+                </label>
+               <input type="file" onChange={handleFileChange} />
+               </div>
               <div className="flex justify-end">
                 <button
                   type="submit"

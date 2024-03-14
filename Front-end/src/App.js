@@ -1,5 +1,4 @@
-// import '@fontsource/kode-mono'
-import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Login from './components/authentication/Login';
 import Register from './components/authentication/Register';
@@ -9,10 +8,6 @@ const App = ()=> {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    // Perform login logic here
-    // Example: Check credentials and set loggedIn state
-
-    // Simulating a successful login
     setLoggedIn(true);
   };
 

@@ -18,7 +18,7 @@ const MysideBar = () => {
         <div className="bg-[#07522A] w-full md:w-1/5 min-h-screen">
           <div className="flex items-center justify-center gap-4">
             <svg
-              fill="#ffffff"
+              fill="#ECAB22"
               version="1.1"
               id="_x31_"
               xmlns="http://www.w3.org/2000/svg"
@@ -119,13 +119,13 @@ const MysideBar = () => {
                 <a href="http://">Management</a>
               </div>
             </div>
-            <div className="text-[#ECAB22] flex items-center gap-3 mt-[15rem] ml-[15%] pt-[10%] font-mono">
+            <div className="text-[#ECAB22] flex items-center gap-3 mt-[10rem] ml-[15%] pt-[10%] font-mono">
               <FiLogOut style={{ width: "12%", height: "12%" }} />{" "}
-              <a href="http://">Sign Out</a>
+              <a href="/Login">Sign Out</a>
             </div>
           </div>
         </div>
-        <div className="bg-blue-100/60 w-full md:w-4/5 overflow-hidden">
+        <div className="bg-[#ecfbf3] w-full md:w-4/5 overflow-hidden">
           <CalenderHeader />
         </div>
       </div>

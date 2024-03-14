@@ -146,7 +146,7 @@ const Login = (props) => {
         />
       </div>
       <div className="signupContainer flex flex-col items-center justify-center mt-4">
-       <span className="text-[#ECAB22] text-sm">Don't have an account?</span>
+        <span className="text-[#ECAB22] text-sm">Don't have an account?</span>
         <a href="/SignUp" className="text-[#fdc64e] text-sm hover:underline">Sign Up</a>
       </div>
     </div>
