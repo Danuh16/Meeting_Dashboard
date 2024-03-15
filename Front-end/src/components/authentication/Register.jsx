@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../Assets/Logo.jpg';
 
 const SignUp = () => {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -69,41 +70,51 @@ const SignUp = () => {
 
   return (
     <div className="mainContainer flex flex-col items-center justify-center h-screen">
-      <div className="logoContainer">
+      <div className="shadow-xl shadow-[#2e533f] rounded-lg p-10 ">
+      <div className="logoContainer shadow-xl shadow-[#2e533f] w-16 h-16 relative -top-16 left-32">
         <img src={logo} alt="Logo" className="logo" />
       </div>
-      <div className="titleContainer flex flex-col items-center justify-center">
+      <div className="titleContainer flex flex-col relative -top-10 items-center justify-center">
         <div className="text-4xl font-bold font-mono text-[#ECAB22]">Sign Up</div>
       </div>
       <br />
-      <div className="inputContainer flex flex-col items-start justify-center">
+      <div className="inputContainer flex flex-col items-start justify-center relative -top-8 border-2 border-[#07552A] p-3 rounded-lg ">
         <input
+          value={fullName}
+          placeholder="Enter your Full Name"
+          onChange={(ev) => setFullName(ev.target.value)}
+          className="outline-none w-full sm:w-80"
+        />
+      </div>
+      <br />
+      <div className="inputContainer flex flex-col items-start justify-center relative -top-6 border-2 border-[#07552A] p-3 rounded-lg ">
+      <input
           value={email}
           placeholder="Enter your email here"
           onChange={(ev) => setEmail(ev.target.value)}
-          className="inputBox w-full sm:w-80"
+          className="outline-none w-full sm:w-80"
         />
         <label className="errorLabel text-red-500 text-xs">{emailError}</label>
       </div>
       <br />
-      <div className="inputContainer flex flex-col items-start justify-center">
+      <div className="inputContainer flex flex-col items-start justify-center relative -top-4 border-2 border-[#07552A] p-3 rounded-lg ">
         <input
           value={password}
           placeholder="Enter your password here"
           type="password"
           onChange={(ev) => setPassword(ev.target.value)}
-          className="inputBox w-full sm:w-80"
+          className="outline-none w-full sm:w-80"
         />
         <label className="errorLabel text-red-500 text-xs">{passwordError}</label>
       </div>
       <br />
-      <div className="inputContainer flex flex-col items-start justify-center">
+      <div className="inputContainer flex flex-col items-start justify-center relative -top-2 border-2 border-[#07552A] p-3 rounded-lg ">
         <input
           value={confirmPassword}
           placeholder="Confirm your password here"
           type="password"
           onChange={(ev) => setConfirmPassword(ev.target.value)}
-          className="inputBox w-full sm:w-80"
+          className="outline-none w-full sm:w-80"
         />
         <label className="errorLabel text-red-500 text-xs">
           {confirmPasswordError}
@@ -112,7 +123,7 @@ const SignUp = () => {
       <br />
       <div className="inputContainer flex flex-col items-center justify-center">
         <input
-          className="inputButton bg-[#07522A] text-[#ECAB22] py-3 px-6 text-2xl rounded-lg cursor-pointer"
+          className="inputButton bg-[#07522A] text-[#ECAB22] py-2 px-4 text-2xl shadow-2xl shadow-[#07552A] rounded-lg cursor-pointer w-28 h-11"
           type="button"
           onClick={onSignUpClick}
           value="Sign Up"
@@ -123,6 +134,7 @@ const SignUp = () => {
         <a href="/login" className="text-[#fdc64e] text-sm hover:underline">
           Sign In
         </a>
+      </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../Assets/Logo.jpg';
 import { LoginStat } from '../../context';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,41 +16,41 @@ const Login = () => {
     e.preventDefault();
     console.log("logged");
     setUserId(true);
-    // setEmailError('');
-    // setPasswordError('');
+    setEmailError('');
+    setPasswordError('');
 
-    // if (email === '') {
-    //   setEmailError('Please enter your email');
-    //   return;
-    // }
+    if (email === '') {
+      setEmailError('Please enter your email');
+      return;
+    }
 
-    // if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-    //   setEmailError('Please enter a valid email');
-    //   return;
-    // }
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      setEmailError('Please enter a valid email');
+      return;
+    }
 
-    // if (password === '') {
-    //   setPasswordError('Please enter a password');
-    //   return;
-    // }
+    if (password === '') {
+      setPasswordError('Please enter a password');
+      return;
+    }
 
-    // if (password.length < 8) {
-    //   setPasswordError('The password must be 8 characters or longer');
-    //   return;
-    // }
-    // checkAccountExists((accountExists) => {
-    //   if (accountExists) {
-    //     logIn();
-    //   } else if (
-    //     window.confirm(
-    //       'An account does not exist with this email address: ' +
-    //         email +
-    //         '. Do you want to create a new account?'
-    //     )
-    //   ) {
-    //     logIn();
-    //   }
-    // });
+    if (password.length < 8) {
+      setPasswordError('The password must be 8 characters or longer');
+      return;
+    }
+    checkAccountExists((accountExists) => {
+      if (accountExists) {
+        logIn();
+      } else if (
+        window.confirm(
+          'An account does not exist with this email address: ' +
+            email +
+            '. Do you want to create a new account?'
+        )
+      ) {
+        logIn();
+      }
+    });
   };
 
   const checkAccountExists = (callback) => {
@@ -126,7 +127,7 @@ const Login = () => {
           value={email}
           placeholder="Enter your email here"
           onChange={(ev) => setEmail(ev.target.value)}
-          className="inputBox w-full sm:w-80"
+          className="outline-none w-full sm:w-80"
         />
         <label className="errorLabel text-red-500 text-xs">{emailError}</label>
       </div>
@@ -136,7 +137,7 @@ const Login = () => {
           value={password}
           placeholder="Enter your password here"
           onChange={(ev) => setPassword(ev.target.value)}
-          className="inputBox w-full sm:w-80"
+          className="outline-none w-full sm:w-80"
         />
         <label className="errorLabel text-red-500 text-xs">{passwordError}</label>
       </div>
@@ -151,7 +152,7 @@ const Login = () => {
       </div>
       <div className="signupContainer flex flex-col items-center justify-center mt-4">
         <span className="text-[#ECAB22] text-sm">Don't have an account?</span>
-        <a href="/SignUp" className="text-[#fdc64e] text-sm hover:underline">Sign Up</a>
+        <Link to="/register" className="text-[#fdc64e] text-sm hover:underline">Sign Up</Link>
       </div>
       </div>
       </div>

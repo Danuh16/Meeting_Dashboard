@@ -121,7 +121,7 @@ const MysideBar = () => {
             </div>
             <div className="text-[#ECAB22] flex items-center gap-3 mt-[10rem] ml-[15%] pt-[10%] font-mono">
               <FiLogOut style={{ width: "12%", height: "12%" }} />{" "}
-              <a href="/Login">Sign Out</a>
+              <a href="/SignUp">Sign Out</a>
             </div>
           </div>
         </div>
