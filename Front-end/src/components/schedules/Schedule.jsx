@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AddMeeting from "./AddMeeting";
 
-const Schedule = () => {
+const Schedule = ({addMeetingObject}) => {
   const [showAddMeeting, setShowAddMeeting] = useState(false);
 
   const HandleAddMeeting = () => {
@@ -43,7 +43,7 @@ const Schedule = () => {
       </div>
       {showAddMeeting && (
         <div className="flex items-center justify-center">
-          <AddMeeting onCloseAddMeeting={handleCloseAddMeeting} />
+          <AddMeeting addMeetingObject={addMeetingObject} onCloseAddMeeting={handleCloseAddMeeting} />
         </div>
       )}
     </div>

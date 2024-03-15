@@ -1,33 +1,41 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import Login from './components/authentication/Login';
-import Register from './components/authentication/Register';
-import MySideBar from './components/MysideBar';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import Login from "./components/authentication/Login";
+import MySideBar from "./components/MysideBar";
+import MyProvider, { LoginStat } from "./context";
 
-const App = ()=> {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setLoggedIn(true);
-  };
-
+const App = () => {
   return (
-    <div className="App">
+    <MyProvider>
       <Router>
-        <Routes>
-          <Route
-            path="/login"
-            element={<Login handleLogin={handleLogin} />}
-          />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/dashboard"
-            element={loggedIn ? <MySideBar /> : <Navigate to="/login" />}
-          />
-        </Routes>
+        <Navigator />
       </Router>
-    </div>
+    </MyProvider>
   );
-}
-
+};
+const Navigator = () => {
+  const { userId } = LoginStat();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userId) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [userId, navigate]);
+  return (
+    <Routes>
+      {userId ? (
+        <Route path={"/"} element={<MySideBar />} />
+      ) : (
+        <Route path="/login" element={<Login />} />
+      )}
+    </Routes>
+  );
+};
 export default App;

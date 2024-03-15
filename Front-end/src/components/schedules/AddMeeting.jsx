@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
-const AddMeeting = ({ onCloseAddMeeting }) => {
+const AddMeeting = ({addMeetingObject, onCloseAddMeeting }) => {
   const [showModal, setShowModal] = useState(true);
+
+  const [name,setName]= useState('')
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -56,10 +58,10 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="name" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label htmlFor="name"   className="block text-[#ECAB22] text-sm font-bold mb-2">
                   Meeting Name
                 </label>
-                <input id="name" type="text" className="border border-[#07522A] rounded w-full py-2 px-3" />
+                <input id="name" type="text" value={name} onChange={(e)=>setName(e.target.value)} className="border border-[#07522A] rounded w-full py-2 px-3" />
               </div>
 
               <div className="mb-4">
@@ -88,7 +90,24 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
 
               <div className="flex justify-end">
                 <button
-                  type="submit"
+               
+                  onClick={(e)=>
+                    
+                    {
+                      
+                      e.preventDefault();
+                      addMeetingObject({
+                    
+                      id:3,
+                      meetingName : name,
+                      startTime:'',
+                      endTime : '',
+                      meetingDate : '',
+                      host :{color:'green',name:'mobile'}
+                
+                    
+
+                  })}}
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
                   + Add

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { FiSearch } from "react-icons/fi";
 import profile from "../../Assets/cutie.jpg";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -11,6 +11,44 @@ import Schedule from "../schedules/Schedule";
 import QuickActions from "../quickActions/QuickActions";
 
 const CalenderHeader = () => {
+
+  const [meetingObjects ,setMeetingObjects ] = useState([
+  
+  ])
+
+  const addObject = (newObject) => {
+    // const newObject =  {
+    //   id:4,
+    //   meetingName : 'meeting1',
+    //   startTime:'',
+    //   endTime : '',
+    //   meetingDate : '',
+    //   host :{color:'red',name:'web'}
+
+    // };
+    setMeetingObjects([...meetingObjects, newObject]);
+    console.log(meetingObjects)
+  };
+
+  const removeObject = (id) => {
+    const updatedObjects = meetingObjects.filter((obj) => obj.id !== id);
+    setMeetingObjects(updatedObjects);
+  };
+
+  // const updateObject = (id, newName) => {
+  //   const updatedObjects = meetingObjects.map((obj) => {
+  //     if (obj.id === id) {
+  //       return { ...obj, name: newName };
+  //     }
+  //     return obj;
+  //   });
+  //   setObjects(updatedObjects);
+  // };
+
+
+
+
+
   return (
     <div className="container p-8">
       <div className="flex flex-col gap-10">
@@ -104,10 +142,19 @@ const CalenderHeader = () => {
         <hr className="bg-white/35 h-[0.2rem]" />
         <div className="flex  gap-10">
           <div>
-            <Schedule />
+            <Schedule
+            
+          
+            addMeetingObject={addObject}
+            />
           </div>
           <div className="flex justify-between w-[60rem]">
-            <Chart />
+            <Chart
+            
+            meetingObjects={meetingObjects}
+            
+        
+            />
           </div>
         </div>
 
