@@ -7,7 +7,7 @@ import img2 from "../../Assets/animation.jpg";
 const Chart = ({meetingObjects}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const timePeriods = ["8AM", "10AM", "12PM", "2PM", "4PM", "6PM"];
+  const timePeriods = ["8AM", "9AM", "10AM","11PM", "12PM", "1PM", "2PM","3PM", "4PM","5PM", "6PM"];
 
  
 
@@ -41,7 +41,7 @@ const Chart = ({meetingObjects}) => {
               />
             </div>
           </div>
-          <div className="flex flex-col-reverse absolute top-[-1rem] left-[-37rem] gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 font-mono text-gray-500">
+          <div className="flex flex-col-reverse absolute top-[-1rem] left-[-35rem] gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 font-mono text-gray-500">
             11 AM
           </div>
         </div>
@@ -49,7 +49,7 @@ const Chart = ({meetingObjects}) => {
        
 
         {timePeriods.map((item) => (
-          <span>{item}</span>
+          <span className=" relative top-44 p-2 -left-20">{item}</span>
         ))}
       </div>
     </div>

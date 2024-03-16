@@ -67,18 +67,18 @@ const Calendar = () => {
           key={i}
           className={`bg-white px-5 py-5 text-xs w-[calc(100%/7)] md:w-[calc(100%/7)] font-semibold rounded-lg ${
             isSelected
-              ? "text-yellow-500 shadow-lg transform scale-123  lg:shadow-lg xl:shadow-lg 2xl:shadow-[#07552A] -top-1"
+              ? "text-[#072e33] shadow-lg transform scale-123  lg:shadow-lg xl:shadow-lg 2xl:shadow-[#07552A] -top-1"
               : "shadow-gray-500"
           }`}
           onClick={() => handleDateClick(date)}
         >
-          <div className="text-yellow-500 flex justify-center text-[15px] font-mono mb-2">
+          <div className="text-[#072e33] flex justify-center text-[15px] font-mono mb-2">
             {format(date, "E")}
           </div>
-          <div className="text-yellow-500 flex justify-center items-center text-[25px] font-bold font-mono">
+          <div className="text-[#072e33] flex justify-center items-center text-[25px] font-bold font-mono">
             {format(date, "d")}
             {isSelected && (
-              <span className="absolute bottom-[15px] left-1/2 transform -translate-x-1/2 w-2 h-2 text-yellow-500 rounded-full">
+              <span className="absolute bottom-[15px] left-1/2 transform -translate-x-1/2 w-2 h-2 text-[#072e33] rounded-full">
                 .
               </span>
             )}
@@ -116,30 +116,30 @@ const Calendar = () => {
 
   return (
     <div className="container flex flex-col sm:items-center">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <h1 className="text-2xl">
-            <div className="text-yellow-500 font-bold font-mono relative left-[-29.5rem]">
-              {format(currentMonth, "MMMM yyyy")}
-            </div>
-          </h1>
-          <IoCalendarOutline className="text-yellow-500 font-bold font-mono ml-2 relative left-[-29rem] text-xl" />
-        </div>
-        <div className="flex items-center ml-auto">
-          <button
-            className="outline-none text-yellow-500"
-            onClick={handlePrevMonth}
-          >
-            <ChevronLeftIcon className="w-6 h-6 relative left-[28rem]" />
-          </button>
-          <button
-            className="outline-none text-yellow-500"
-            onClick={handleNextMonth}
-          >
-            <ChevronRightIcon className="w-6 h-6 relative left-[28rem]" />
-          </button>
-        </div>
+    <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center">
+        <h1 className="text-2xl">
+          <div className="text-[#072e33] font-bold font-mono relative sm:left-[-29.5rem]">
+            {format(currentMonth, "MMMM yyyy")}
+          </div>
+        </h1>
+        <IoCalendarOutline className="text-[#072e33] font-bold font-mono ml-2 relative sm:left-[-29rem] text-xl" />
       </div>
+      <div className="flex items-center ml-auto">
+        <button
+          className="outline-none text-[#072e33]"
+          onClick={handlePrevMonth}
+        >
+          <ChevronLeftIcon className="w-6 h-6 relative sm:left-[28rem]" />
+        </button>
+        <button
+          className="outline-none text-[#072e33]"
+          onClick={handleNextMonth}
+        >
+          <ChevronRightIcon className="w-6 h-6 relative sm:left-[28rem]" />
+        </button>
+      </div>
+    </div>
       {renderCalendar()}
       <style>
         {`

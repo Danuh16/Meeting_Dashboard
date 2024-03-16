@@ -45,7 +45,7 @@ const QuickActions = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <button
-            className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2"
+            className="bg-[#07522a] text-[#ECAB22] flex gap-4 text-lg rounded-xl py-4 px-2 shadow-md  shadow-[#2e533f] justify-center"
             onClick={handleAddAttachment}
           >
             <FiFile className="mt-1 text-2xl" /> Attachments
@@ -54,16 +54,16 @@ const QuickActions = () => {
             <AddAttachment onCloseAddAttachment={handleCloseAddAttachment} />
           )}
           <button
-            className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2"
+            className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2 shadow-md shadow-[#2e533f] justify-center"
             onClick={handleAddAttandee}
           >
-            <RiUserLine className="mt-1 text-2xl" /> Attendee
+            <RiUserLine className="mt-1 text-2xl" />Add Attandee
           </button>
           {showAddAttandee && (
             <AddAttandee onCloseAddAttandee={handleCloseAddAttandee} />
           )}
           <button
-            className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2"
+            className="bg-[#07522a] text-[#ECAB22] flex gap-3 text-lg rounded-xl py-4 px-2 shadow-md shadow-[#2e533f] justify-center"
             onClick={handleAddRoom}
           >
             <FaHome className="mt-1 text-2xl" /> Add Room

@@ -57,15 +57,15 @@ const CalenderHeader = () => {
           <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
             <img src={profile} alt="" className="h-11 w-11 rounded-full" />
             <div>
-              <h3 className="text-[#ECAB22] font-bold">Tochukwu M.</h3>
-              <h4 className="text-[#dfc387] text-[0.8rem] font-mono">
+              <h3 className="text-[#072E33] font-bold">Tochukwu M.</h3>
+              <h4 className="text-[#0f9890] text-[0.8rem] font-mono">
                 Joined 7 months ago
               </h4>
             </div>
           </div>
           <div className="flex gap-4">
             <form className="flex items-center gap-3 h-[37px] bg-white rounded-full px-[3%] md:w-[280px]">
-              <FiSearch className="text-[#ECAB22] text-[20px]" />
+              <FiSearch className="text-[#072E33] text-[20px]" />
               <input
                 type="text"
                 className="outline-none w-full text-sm"
@@ -80,11 +80,11 @@ const CalenderHeader = () => {
               />
             </div>
             <div className="pt-1">
-              <AiOutlineUserAdd className="text-[#ECAB22] text-[20px] gap-6" size={24} />
+              <AiOutlineUserAdd className="text-[#072E33] text-[20px] gap-6" size={24} />
               <a href="http://"></a>
             </div>
             <div className="pt-1">
-              <BsGrid className="text-[#ECAB22] text-[20px]" size={24} />
+              <BsGrid className="text-[#072E33] text-[20px]" size={24} />
               <a href="http://"></a>
             </div>
           </div>
@@ -92,15 +92,15 @@ const CalenderHeader = () => {
         <div className="flex justify-between">
           <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
             <div>
-              <h3 className="text-[1.5rem] text-[#ECAB22] font-bold font-mono">
+              <h3 className="text-[1.5rem] text-[#072E33] font-bold font-mono">
                 Calendar Meetings
               </h3>
               <div className="flex items-center">
-                <h4 className="text-[#e3b85d] text-[0.85rem] font-mono">
+                <h4 className="text-[#0f9890] text-[0.85rem] font-mono">
                   San Francisco, CA
                 </h4>
-                <FiMapPin className="text-[#ECAB22] text-[20 px] ml-2 mr-2" />
-                <span className="ml-1 text-[#edbf5a] font-mono text-[1.1rem]">
+                <FiMapPin className="text-[#072E33] text-[20 px] ml-2 mr-2" />
+                <span className="ml-1 text-[#0f9890] font-mono text-[1.1rem]">
                   <span className="absolute top-[9.18rem] left-[26rem]">.</span>
                   364, Tochukwu's Office
                 </span>
@@ -118,18 +118,18 @@ const CalenderHeader = () => {
               />
             </div>
             <div className="pt-1 bg-white flex justify-center rounded-full h-8 w-8">
-              <RiBookmarkLine className="text-[#ECAB22] gap-6" size={20} />
+              <RiBookmarkLine className="text-[#072E33] gap-6" size={20} />
               <a href="http://"></a>
             </div>
             <div className="pt-1 bg-white flex justify-center rounded-full h-8 w-8">
-              <RiEdit2Line className="text-[#ECAB22] text-[20px] gap"
+              <RiEdit2Line className="text-[#072E33] text-[20px] gap"
                 size={20}
               />
               <a href="http://"></a>
             </div>
             <div className="pt-1 bg-white flex justify-center rounded-full h-8 w-8 ">
               <RiDeleteBinLine
-                className="text-[#ECAB22] text-[20px] text-center"
+                className="text-[#072E33] text-[20px] text-center"
                 size={20}
               />
               <a href="http://"></a>
@@ -143,17 +143,12 @@ const CalenderHeader = () => {
         <div className="flex  gap-10">
           <div>
             <Schedule
-            
-          
             addMeetingObject={addObject}
             />
           </div>
           <div className="flex justify-between w-[60rem]">
             <Chart
-            
             meetingObjects={meetingObjects}
-            
-        
             />
           </div>
         </div>
