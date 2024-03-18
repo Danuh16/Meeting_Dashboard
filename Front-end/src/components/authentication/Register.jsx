@@ -7,6 +7,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullNameError,setFullNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
@@ -14,9 +15,15 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const onSignUpClick = async () => {
+    setFullNameError('');
     setEmailError('');
     setPasswordError('');
     setConfirmPasswordError('');
+
+    if(fullName === ''){
+      setFullNameError('please enter you fullName');
+      return;
+    }
 
     if (email === '') {
       setEmailError('Please enter your email');
@@ -54,7 +61,7 @@ const SignUp = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ fullName,email, password }),
         });
   
         if (response.ok) {
@@ -85,6 +92,7 @@ const SignUp = () => {
           onChange={(ev) => setFullName(ev.target.value)}
           className="outline-none w-full sm:w-80"
         />
+        <label className="errorLabel text-red-500 text-xs">{fullNameError}</label>
       </div>
       <br />
       <div className="inputContainer flex flex-col items-start justify-center relative -top-6 border-2 border-[#07552A] p-3 rounded-lg ">

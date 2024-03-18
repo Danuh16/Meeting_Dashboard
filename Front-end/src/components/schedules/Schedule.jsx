@@ -3,6 +3,7 @@ import AddMeeting from "./AddMeeting";
 
 const Schedule = ({addMeetingObject}) => {
   const [showAddMeeting, setShowAddMeeting] = useState(false);
+  
 
   const HandleAddMeeting = () => {
     setShowAddMeeting(true);

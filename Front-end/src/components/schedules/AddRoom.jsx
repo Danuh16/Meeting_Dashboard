@@ -1,7 +1,28 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 
 const AddRoom = ({ onCloseAddRoom }) => {
   const showModal = true;
+  const [room, setRoom] = useState('');
+  const [capacity,setCapacity] = useState('');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://192.168.0.103:8000/api/event/add_room/');
+      if (response.ok) {
+        const jsonData = await response.json();
+        setRoom(jsonData.room_name);
+        setCapacity(jsonData.capacity);
+      } else {
+        console.error('Error:', response.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <>
@@ -29,6 +50,7 @@ const AddRoom = ({ onCloseAddRoom }) => {
                   id="room"
                   type="text"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
+                  value={room}
                 />
               </div>
               <div className="mb-4">
@@ -42,6 +64,7 @@ const AddRoom = ({ onCloseAddRoom }) => {
                   id="capacity"
                   type="number"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
+                  value={capacity}
                 />
               </div>
 
