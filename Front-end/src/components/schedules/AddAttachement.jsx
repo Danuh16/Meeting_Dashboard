@@ -1,24 +1,45 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddAttachment = ({ onCloseAddAttachment }) => {
   const [showModal, setShowModal] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [event, setEvent] = useState("");
+  const [file, setFile] = useState("");
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (selectedFile) {
-      console.log('Selected file:', selectedFile);
+    if (event.target.files) {
+      const file = event.target.files[0];
+      setFile(file);
     } else {
-      console.log('No file selected');
+      console.warn("No file selected yet.");
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "http://192.168.0.103:8000/api/event/add_room/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ event, file }),
+        }
+      );
+
+      if (response.ok) {
+        navigate("/MysideBar");
+      } else {
+        const data = await response.json();
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -50,6 +71,8 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                 <select
                   id="schedule-for"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
+                  value={event}
+                  onChange={(e) => setEvent(e.target.value)}
                 >
                   <option value=""></option>
                   <option value="">Mobile App</option>
@@ -58,15 +81,21 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                   <option value="">Team Management</option>
                 </select>
               </div>
-               <div className="div">
-               <label
+              <div className="div">
+                <label
                   htmlFor="File"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
                 >
                   File
                 </label>
-               <input type="file" onChange={handleFileChange} />
-               </div>
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    handleFileChange(event);
+                    setFile(e.target.value);
+                  }}
+                />
+              </div>
               <div className="flex justify-end">
                 <button
                   type="submit"

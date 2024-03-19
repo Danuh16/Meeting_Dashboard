@@ -1,10 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const AddMeeting = ({addMeetingObject, onCloseAddMeeting }) => {
+const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
   const [showModal, setShowModal] = useState(true);
 
-  const [name,setName]= useState('')
+  const [host, setHost] = useState("");
+  const [room, setRoom] = useState("");
+  const [meetingName, setMeetingName] = useState("");
+  const [description, setDescription] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://192.168.0.103:8000/api/event/")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setHost(data);
+        setRoom(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "http://192.168.0.103:8000/api/event/add_room/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            host,
+            room,
+            meetingName,
+            description,
+            startTime,
+            endTime,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        navigate("/MysideBar");
+      } else {
+        const data = await response.json();
+        console.log(data.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleCloseModal = () => {
     setShowModal(false);
     onCloseAddMeeting();
@@ -23,91 +75,117 @@ const AddMeeting = ({addMeetingObject, onCloseAddMeeting }) => {
               X
             </button>
 
-            <h2 className="text-lg text-[#ECAB22] font-mono font-bold mb-4">Add Meeting</h2>
+            <h2 className="text-lg text-[#ECAB22] font-mono font-bold mb-4">
+              Add Meeting
+            </h2>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="schedule-for" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="schedule-for"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   Host
                 </label>
                 <select
                   id="schedule-for"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
+                  value={host}
+                  onChange={(e) => setHost(e.target.value)}
                 >
-                  <option value=""></option>
-                  <option value="">Mobile App</option>
-                  <option value="">Infography</option>
-                  <option value="">Wireframes</option>
-                  <option value="">Team Management</option>
+                  <option></option>
                 </select>
               </div>
               <div className="mb-4">
-                <label htmlFor="room" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="room"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   Room
                 </label>
                 <select
                   id="room"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
+                  value={room}
+                  onChange={(e) => setRoom(e.target.value)}
                 >
                   <option value=""></option>
-                  <option value="">Mobile App</option>
-                  <option value="">Infography</option>
-                  <option value="">Wireframes</option>
-                  <option value="">Team Management</option>
                 </select>
               </div>
 
               <div className="mb-4">
-                <label htmlFor="name"   className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   Meeting Name
                 </label>
-                <input id="name" type="text" value={name} onChange={(e)=>setName(e.target.value)} className="border border-[#07522A] rounded w-full py-2 px-3" />
+                <input
+                  id="name"
+                  type="text"
+                  onChange={(e) => setMeetingName(e.target.value)}
+                  className="border border-[#07522A] rounded w-full py-2 px-3"
+                />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="description" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="description"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   Description
                 </label>
                 <input
                   id="description"
                   type="text"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="start" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="start"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   Start Time
                 </label>
-                <input id="start" type="text" className="border border-[#07522A] rounded w-full py-2 px-3" />
+                <input
+                  id="start"
+                  type="text"
+                  className="border border-[#07522A] rounded w-full py-2 px-3"
+                  onChange={(e) => setStartTime(e.target.value)}
+                />
               </div>
               <div className="mb-4">
-                <label htmlFor="end" className="block text-[#ECAB22] text-sm font-bold mb-2">
+                <label
+                  htmlFor="end"
+                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                >
                   End Time
                 </label>
-                <input id="end" type="text" className="border border-[#07522A] rounded w-full py-2 px-3" />
+                <input
+                  id="end"
+                  type="text"
+                  className="border border-[#07522A] rounded w-full py-2 px-3"
+                  onChange={(e) => setEndTime(e.target.value)}
+                />
               </div>
 
               <div className="flex justify-end">
                 <button
-               
-                  onClick={(e)=>
-                    
-                    {
-                      
-                      e.preventDefault();
-                      addMeetingObject({
-                    
-                      id:3,
-                      meetingName : name,
-                      startTime:'',
-                      endTime : '',
-                      meetingDate : '',
-                      host :{color:'green',name:'mobile'}
-                
-                    
-
-                  })}}
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addMeetingObject({
+                      id: 3,
+                      meetingName: meetingName,
+                      startTime: "",
+                      endTime: "",
+                      meetingDate: "",
+                      host: { color: "green", meetingName: "mobile" },
+                    });
+                  }}
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
                   + Add
