@@ -19,9 +19,7 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "http://192.168.0.103:8000/api/event/add_room/",
-        {
+      const response = await fetch("http://192.168.0.103:8000/api/event/add_room/",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -75,10 +73,6 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                   onChange={(e) => setEvent(e.target.value)}
                 >
                   <option value=""></option>
-                  <option value="">Mobile App</option>
-                  <option value="">Infography</option>
-                  <option value="">Wireframes</option>
-                  <option value="">Team Management</option>
                 </select>
               </div>
               <div className="div">

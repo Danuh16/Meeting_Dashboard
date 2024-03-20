@@ -1,62 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
+const AddMeeting = ({ onCloseAddMeeting, addMeetingToEpg }) => {
   const [showModal, setShowModal] = useState(true);
 
-  const [host, setHost] = useState("");
-  const [room, setRoom] = useState("");
-  const [meetingName, setMeetingName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch("http://192.168.0.103:8000/api/event/")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setHost(data);
-        setRoom(data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  const handleSubmit = async (e) => {
+  const addObject = (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        "http://192.168.0.103:8000/api/event/add_room/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            host,
-            room,
-            meetingName,
-            description,
-            startTime,
-            endTime,
-          }),
-        }
-      );
 
-      if (response.ok) {
-        navigate("/MysideBar");
-      } else {
-        const data = await response.json();
-        console.log(data.error);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const uuid = uuidv4();
+    const newMeeting = {
+      id: uuid,
+      title: name,
+      channelUuid: channelUuid,
+      since: since,
+      till: till,
+    };
+    addMeetingToEpg(newMeeting);
+    onCloseAddMeeting();
   };
+
+  const [name, setName] = useState("");
+  const [channelUuid, setChannelUuid] = useState("");
+  const [since, setSince] = useState("");
+  const [till, setTill] = useState("");
+
   const handleCloseModal = () => {
     setShowModal(false);
     onCloseAddMeeting();
@@ -79,7 +46,7 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
               Add Meeting
             </h2>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={addObject}>
               <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
@@ -90,10 +57,12 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                 <select
                   id="schedule-for"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                  value={host}
-                  onChange={(e) => setHost(e.target.value)}
                 >
-                  <option></option>
+                  <option value=""></option>
+                  <option value="">Mobile App</option>
+                  <option value="">Infography</option>
+                  <option value="">Wireframes</option>
+                  <option value="">Team Management</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -105,11 +74,26 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                 </label>
                 <select
                   id="room"
+                  value={channelUuid}
+                  onChange={(e) => setChannelUuid(e.target.value)}
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                  value={room}
-                  onChange={(e) => setRoom(e.target.value)}
                 >
                   <option value=""></option>
+                  <option value="16fdfefe-e466-4090-bc1a-57c43937f826">
+                    Mobile App
+                  </option>
+                  <option value="96aaf72c-b5ed-4ce4-937d-1912e4f8bf0d">
+                    Designs
+                  </option>
+                  <option value="06d3366b-9ec2-46e8-a741-df3ee1abeed7">
+                    Infography
+                  </option>
+                  <option value="b51689be-8eb4-4481-b208-6bbcb7fb47c2">
+                    Wireframes
+                  </option>
+                  <option value="b51689be-8eb4-4481-b208-6bbcb7fb47c3">
+                    Team Management
+                  </option>
                 </select>
               </div>
 
@@ -123,7 +107,8 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                 <input
                   id="name"
                   type="text"
-                  onChange={(e) => setMeetingName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="border border-[#07522A] rounded w-full py-2 px-3"
                 />
               </div>
@@ -139,7 +124,6 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                   id="description"
                   type="text"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
 
@@ -152,9 +136,10 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                 </label>
                 <input
                   id="start"
-                  type="text"
+                  type="datetime-local"
+                  value={since}
+                  onChange={(e) => setSince(e.target.value)}
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  onChange={(e) => setStartTime(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -166,26 +151,16 @@ const AddMeeting = ({ addMeetingObject, onCloseAddMeeting }) => {
                 </label>
                 <input
                   id="end"
-                  type="text"
+                  type="datetime-local"
+                  value={till}
+                  onChange={(e) => setTill(e.target.value)}
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  onChange={(e) => setEndTime(e.target.value)}
                 />
               </div>
 
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addMeetingObject({
-                      id: 3,
-                      meetingName: meetingName,
-                      startTime: "",
-                      endTime: "",
-                      meetingDate: "",
-                      host: { color: "green", meetingName: "mobile" },
-                    });
-                  }}
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
                   + Add

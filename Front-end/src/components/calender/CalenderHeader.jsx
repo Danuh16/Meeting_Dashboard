@@ -10,20 +10,25 @@ const CalenderHeader = () => {
   const [meetingObjects, setMeetingObjects] = useState([]);
 
   const addObject = (newObject) => {
-    setMeetingObjects([...meetingObjects, newObject]);
-  };
+    // const newObject =  {
+    //   id:4,
+    //   meetingName : 'meeting1',
+    //   startTime:'',
+    //   endTime : '',
+    //   meetingDate : '',
+    //   host :{color:'red',name:'web'}
 
-  const removeObject = (id) => {
-    const updatedObjects = meetingObjects.filter((obj) => obj.id !== id);
-    setMeetingObjects(updatedObjects);
+    // };
+    setMeetingObjects([...meetingObjects, newObject]);
+    console.log(meetingObjects);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8"> {/* Center the content and add padding */}
+    <div className="container p-8">
       <div className="flex flex-col gap-10">
         <div className="flex justify-between">
-          {/* Profile */}
-          <div className="flex flex-1 gap-3 md:flex-row sm:flex-col">
+          {/* profile */}
+          <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
             <img src={profile} alt="" className="h-11 w-11 rounded-full" />
             <div>
               <h3 className="text-[#072E33] font-bold">Tochukwu M.</h3>
@@ -32,11 +37,8 @@ const CalenderHeader = () => {
               </h4>
             </div>
           </div>
-          {/* Search and other buttons */}
           <div className="flex gap-4">
-            <form
-              className="flex items-center gap-3 h-[37px] bg-white rounded-full px-3 md:w-[280px]"
-            >
+            <form className="flex items-center gap-3 h-[37px] bg-white rounded-full px-[3%] md:w-[280px]">
               <FiSearch className="text-[#072E33] text-[20px]" />
               <input
                 type="text"
@@ -44,20 +46,23 @@ const CalenderHeader = () => {
                 placeholder="Search for job, task, or resume"
               />
             </form>
-            <div className="flex flex-col md:flex-row">
+            <div>
               <input
                 type="number"
-                className="appearance-cover-full outline-none text-sm pl-5 pr-3 gap-3 h-[37px] bg-white rounded-full w-[150px] md:w-auto"
+                className="appearance-cover-full outline-none text-sm pl-5 pr-3 gap-3 h-[37px] bg-white rounded-full w-[150px]"
                 placeholder="Choose"
               />
-              <div className="pt-1 md:pt-0">
-                <AiOutlineUserAdd className="text-[#072E33] text-[20px] gap-6" size={24} />
-                <a href="http://"></a>
-              </div>
-              <div className="pt-1 md:pt-0">
-                <BsGrid className="text-[#072E33] text-[20px]" size={24} />
-                <a href="http://"></a>
-              </div>
+            </div>
+            <div className="pt-1">
+              <AiOutlineUserAdd
+                className="text-[#072E33] text-[20px] gap-6"
+                size={24}
+              />
+              <a href="http://"></a>
+            </div>
+            <div className="pt-1">
+              <BsGrid className="text-[#072E33] text-[20px]" size={24} />
+              <a href="http://"></a>
             </div>
           </div>
         </div>
@@ -65,10 +70,8 @@ const CalenderHeader = () => {
           <Calendar />
         </div>
         <hr className="bg-white/35 h-[0.2rem]" />
-        <div className="flex gap-10">
-          <div className="flex justify-between w-full"> {/* Full width for smaller screens */}
+          <div className="col-12">
             <Chart meetingObjects={meetingObjects} />
-          </div>
         </div>
       </div>
     </div>

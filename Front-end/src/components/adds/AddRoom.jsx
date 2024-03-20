@@ -1,47 +1,7 @@
-import React,{useState,useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const AddRoom = ({ onCloseAddRoom }) => {
   const showModal = true;
-  const [room, setRoom] = useState('');
-  const [capacity,setCapacity] = useState('');
-  const navigate = useNavigate();
-
-
-  useEffect(() => {
-    fetch("http://192.168.0.103:8000/api/event/")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setRoom(data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://192.168.0.103:8000/api/event/add_room/",{
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ room, capacity }),
-        }
-      );
-
-      if (response.ok) {
-        navigate("/MysideBar");
-      } else {
-        const data = await response.json();
-        console.log(data.error);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <>
@@ -57,7 +17,7 @@ const AddRoom = ({ onCloseAddRoom }) => {
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
               Add Room
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="mb-4">
                 <label
                   htmlFor="room"
@@ -65,15 +25,11 @@ const AddRoom = ({ onCloseAddRoom }) => {
                 >
                   Room Name
                 </label>
-                <select
+                <input
                   id="room"
                   type="text"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  value={room}
-                  onChange={(e) => setRoom(e.target.value)}
-                >
-                  <option></option>
-                </select>
+                />
               </div>
               <div className="mb-4">
                 <label
@@ -86,7 +42,6 @@ const AddRoom = ({ onCloseAddRoom }) => {
                   id="capacity"
                   type="number"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  onChange={(e) => setCapacity(e.target.value)}
                 />
               </div>
 

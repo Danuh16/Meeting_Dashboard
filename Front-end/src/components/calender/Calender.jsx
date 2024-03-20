@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  format,
-  addDays,
-  setMonth,
-  setYear,
-  setDate,
-  getDaysInMonth,
-} from "date-fns";
+import { format, addDays, setMonth, setDate, getDaysInMonth } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { IoCalendarOutline } from "react-icons/io5";
 
@@ -19,22 +12,37 @@ const Calendar = () => {
   };
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prevMonth) => setMonth(prevMonth, prevMonth.getMonth() - 1));
+    setCurrentMonth((prevMonth) =>
+      setMonth(prevMonth, prevMonth.getMonth() - 1)
+    );
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prevMonth) => setMonth(prevMonth, prevMonth.getMonth() + 1));
+    setCurrentMonth((prevMonth) =>
+      setMonth(prevMonth, prevMonth.getMonth() + 1)
+    );
   };
 
   const renderCalendar = () => {
     const days = [];
-    const startDate = setDate(setMonth(currentMonth, currentMonth.getMonth()), 1);
+    const startDate = setDate(
+      setMonth(currentMonth, currentMonth.getMonth()),
+      1
+    );
     const totalDaysInMonth = getDaysInMonth(currentMonth);
-    const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const lastDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+    const firstDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    );
+    const lastDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0
+    );
     const daysBeforeMonth = firstDayOfMonth.getDay();
     const daysAfterMonth = 6 - lastDayOfMonth.getDay();
-  
+
     // Add days from previous month
     for (let i = daysBeforeMonth - 1; i >= 0; i--) {
       const date = addDays(startDate, -i);
@@ -52,7 +60,7 @@ const Calendar = () => {
         </div>
       );
     }
-  
+
     // Add days from current month
     for (let i = 0; i < totalDaysInMonth; i++) {
       const date = addDays(startDate, i);
@@ -61,7 +69,7 @@ const Calendar = () => {
         date.getMonth() === selectedDate.getMonth() &&
         date.getDate() === selectedDate.getDate() &&
         date.getFullYear() === selectedDate.getFullYear();
-  
+
       days.push(
         <div
           key={i}
@@ -86,7 +94,7 @@ const Calendar = () => {
         </div>
       );
     }
-  
+
     // Add days from next month
     for (let i = 1; i <= daysAfterMonth; i++) {
       const date = addDays(lastDayOfMonth, i);
@@ -104,7 +112,7 @@ const Calendar = () => {
         </div>
       );
     }
-  
+
     return (
       <div className="container flex flex-col">
         <div className="calendar-container overflow-x-auto hide-scrollbar">
@@ -116,30 +124,30 @@ const Calendar = () => {
 
   return (
     <div className="container flex flex-col sm:items-center">
-    <div className="flex justify-between items-center mb-4">
-      <div className="flex items-center">
-        <h1 className="text-2xl">
-          <div className="text-[#072e33] font-bold font-mono relative sm:left-[-29.5rem]">
-            {format(currentMonth, "MMMM yyyy")}
-          </div>
-        </h1>
-        <IoCalendarOutline className="text-[#072e33] font-bold font-mono ml-2 relative sm:left-[-29rem] text-xl" />
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center">
+          <h1 className="text-2xl">
+            <div className="text-[#072e33] font-bold font-mono relative sm:left-[-29.5rem]">
+              {format(currentMonth, "MMMM yyyy")}
+            </div>
+          </h1>
+          <IoCalendarOutline className="text-[#072e33] font-bold font-mono ml-2 relative sm:left-[-29rem] text-xl" />
+        </div>
+        <div className="flex items-center ml-auto">
+          <button
+            className="outline-none text-[#072e33]"
+            onClick={handlePrevMonth}
+          >
+            <ChevronLeftIcon className="w-6 h-6 relative sm:left-[28rem]" />
+          </button>
+          <button
+            className="outline-none text-[#072e33]"
+            onClick={handleNextMonth}
+          >
+            <ChevronRightIcon className="w-6 h-6 relative sm:left-[28rem]" />
+          </button>
+        </div>
       </div>
-      <div className="flex items-center ml-auto">
-        <button
-          className="outline-none text-[#072e33]"
-          onClick={handlePrevMonth}
-        >
-          <ChevronLeftIcon className="w-6 h-6 relative sm:left-[28rem]" />
-        </button>
-        <button
-          className="outline-none text-[#072e33]"
-          onClick={handleNextMonth}
-        >
-          <ChevronRightIcon className="w-6 h-6 relative sm:left-[28rem]" />
-        </button>
-      </div>
-    </div>
       {renderCalendar()}
       <style>
         {`

@@ -11,14 +11,11 @@ export function useApp() {
   const channelsData = React.useMemo(() => channels, [channels]);
   const epgData = React.useMemo(() => epg, [epg]);
 
-  
-  const screenWidth = window.innerWidth;
-
   const { getEpgProps, getLayoutProps } = useEpg({
     channels: channelsData,
     epg: epgData,
-    dayWidth: screenWidth > 768 ? 6200 : 4400,
-    sidebarWidth: screenWidth > 768 ? 100 : 0,
+    dayWidth: 7200,
+    sidebarWidth: 200,
     itemHeight: 80,
     isSidebar: true,
     isTimeline: true,
@@ -41,10 +38,9 @@ export function useApp() {
   const addMeetingToEpg = (newMeeting) => {
     setEpg([...epg, newMeeting]);
   };
-
   React.useEffect(() => {
     handleFetchResources();
   }, [handleFetchResources]);
 
-  return { getEpgProps, getLayoutProps, addMeetingToEpg, isLoading };
+  return { getEpgProps, getLayoutProps, addMeetingToEpg ,isLoading };
 }
