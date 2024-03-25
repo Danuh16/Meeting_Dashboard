@@ -189,10 +189,6 @@ const MysideBar = () => {
               <div className="flex justify-between">
                 <Calendar />
               </div>
-              <hr className="bg-white/35 h-[0.2rem]" />
-              <div className="col-12">
-                <Chart meetingObjects={meetingObjects} />
-              </div>
             </div>
           </div>
         </div>

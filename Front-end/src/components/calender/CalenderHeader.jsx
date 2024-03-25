@@ -10,15 +10,6 @@ const CalenderHeader = () => {
   const [meetingObjects, setMeetingObjects] = useState([]);
 
   const addObject = (newObject) => {
-    // const newObject =  {
-    //   id:4,
-    //   meetingName : 'meeting1',
-    //   startTime:'',
-    //   endTime : '',
-    //   meetingDate : '',
-    //   host :{color:'red',name:'web'}
-
-    // };
     setMeetingObjects([...meetingObjects, newObject]);
     console.log(meetingObjects);
   };
@@ -26,7 +17,7 @@ const CalenderHeader = () => {
   return (
     <div className="container p-8">
       <div className="flex flex-col gap-10">
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap">
           {/* profile */}
           <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
             <img src={profile} alt="" className="h-11 w-11 rounded-full" />
@@ -37,7 +28,7 @@ const CalenderHeader = () => {
               </h4>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <form className="flex items-center gap-3 h-[37px] bg-white rounded-full px-[3%] md:w-[280px]">
               <FiSearch className="text-[#072E33] text-[20px]" />
               <input
@@ -70,8 +61,8 @@ const CalenderHeader = () => {
           <Calendar />
         </div>
         <hr className="bg-white/35 h-[0.2rem]" />
-          <div className="col-12">
-            <Chart meetingObjects={meetingObjects} />
+        <div className="col-12">
+          <Chart meetingObjects={meetingObjects} />
         </div>
       </div>
     </div>

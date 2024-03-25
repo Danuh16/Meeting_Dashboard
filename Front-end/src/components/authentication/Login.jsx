@@ -1,161 +1,137 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logo from '../../Assets/Logo.jpg';
-import { LoginStat } from '../../context';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import logo from "../../Assets/Logo.jpg";
+import { LoginStat } from "../../context";
+import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const {userId,setUserId}= LoginStat();
   const navigate = useNavigate();
+  const { setUserId } = LoginStat();
 
-  const onButtonClick = (e) => {
-    e.preventDefault();
-    console.log("logged");
-    setUserId(true);
-    setEmailError('');
-    setPasswordError('');
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Please enter a valid email")
+      .required("Please enter your email"),
+    password: Yup.string()
+      .min(8, "The password must be 8 characters or longer")
+      .required("Please enter a password"),
+  });
 
-    if (email === '') {
-      setEmailError('Please enter your email');
-      return;
-    }
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(
+          "https://gms.crosslightafrica.com/api/v/auth/login/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
 
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      setEmailError('Please enter a valid email');
-      return;
-    }
+        const data = await response.json();
 
-    if (password === '') {
-      setPasswordError('Please enter a password');
-      return;
-    }
-
-    if (password.length < 8) {
-      setPasswordError('The password must be 8 characters or longer');
-      return;
-    }
-    checkAccountExists((accountExists) => {
-      if (accountExists) {
-        logIn();
-      } else if (
-        window.confirm(
-          'An account does not exist with this email address: ' +
-            email +
-            '. Do you want to create a new account?'
-        )
-      ) {
-        logIn();
-      }
-    });
-  };
-
-  const checkAccountExists = (callback) => {
-    fetch('', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        callback(r?.userExists);
-      });
-  };
-
-  const logIn = () => {
-    fetch('', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        if (r.message === 'success') {
-          localStorage.setItem(
-            'user',
-            JSON.stringify({ email, token: r.token })
-          );
+        if (response.ok) {
+          console.log(data.is_superuser);
+          
+          const userSession = {
+            email: values.email,
+            token: data.access_token,
+            full_name: data.full_name,
+          };
+        
+          localStorage.setItem("userSession", JSON.stringify(userSession));
           setUserId(true);
-          setEmail(email);
-          navigate('/');
+        
+          if (data.is_superuser) {
+            navigate('/Dashboard ');
+          } else {
+            navigate('/MysideBar');
+          }
         } else {
-          window.alert('Wrong email or password');
+          window.alert(data.detail);
         }
-      });
-  };
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (!user || !user.token) {
-      setUserId(false);
-      return;
-    }
-
-    fetch('', {
-      method: 'POST',
-      headers: {
-        'jwt-token': user.token,
-      },
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        setUserId(r.message === 'success');
-        setEmail(user.email || '');
-      });
-  }, []);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   return (
-    <div className="container flex flex-col items-center justify-center h-screen ">
-      <div className="shadow-xl shadow-[#2e533f] rounded-lg p-10 ">
-      <div className="logoContainer shadow-xl shadow-[#2e533f] w-16 h-16 relative -top-16 left-32">
-        <img src={logo} alt="Logo" className="logo" />
+    <div className="container flex flex-col items-center justify-center h-screen bg-green-[#01160B]">
+      <div className="shadow-xl shadow-[#2e533f] rounded-lg p-10 bg-green-[#01160B]">
+        <div className="logoContainer shadow-xl shadow-[#071F10] w-16 h-16 relative -top-16 left-32">
+          <img src={logo} alt="Logo" className="logo" />
+        </div>
+        <div className="titleContainer flex flex-col relative -top-10 items-center justify-center">
+          <div className="text-4xl font-bold font-mono text-[#022C13]">
+            Login
+          </div>
+        </div>
+        <br />
+        <form onSubmit={formik.handleSubmit}>
+          <div className="inputContainer flex flex-col items-start justify-center relative -top-8 border-2 border-[#07552A] p-3 rounded-lg">
+            <input
+              type="text"
+              name="email"
+              value={formik.values.email}
+              placeholder="Enter your email here"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="outline-none w-full sm:w-80"
+            />
+            {formik.touched.email && formik.errors.email && (
+              <label className="errorLabel text-red-500 text-xs">
+                {formik.errors.email}
+              </label>
+            )}
+          </div>
+          <br />
+          <div className="inputContainer flex flex-col items-start justify-center relative -top-6 border-2 border-[#07552A] p-3 rounded-lg">
+            <input
+              type="password"
+              name="password"
+              value={formik.values.password}
+              placeholder="Enter your password here"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="outline-none w-full sm:w-80"
+            />
+            {formik.touched.password && formik.errors.password && (
+              <label className="errorLabel text-red-500 text-xs">
+                {formik.errors.password}
+              </label>
+            )}
+          </div>
+          <br />
+          <div className="inputContainer flex flex-col items-center justify-center">
+            <button
+              type="submit"
+              className="inputButton bg-[#07522A] text-[#ECAB22] py-1 px-6 text-xl shadow-2xl shadow-[#07552A] rounded-lg cursor-pointer w-28 h-11"
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
+        <div className="signupContainer flex flex-col items-center justify-center mt-4">
+          <span className="text-[#ECAB22] text-sm">Don't have an account?</span>
+          <Link
+            to="/register"
+            className="text-[#07522A] text-sm hover:underline"
+          >
+            Sign Up
+          </Link>
+        </div>
       </div>
-      <div className="titleContainer flex flex-col relative -top-10 items-center justify-center">
-        <div className="text-4xl font-bold font-mono text-[#ECAB22]">Login</div>
-      </div>
-      <br />
-      <div className="inputContainer flex flex-col items-start justify-center relative -top-8 border-2 border-[#07552A] p-3 rounded-lg ">
-        <input
-          value={email}
-          placeholder="Enter your email here"
-          onChange={(ev) => setEmail(ev.target.value)}
-          className="outline-none w-full sm:w-80"
-        />
-        <label className="errorLabel text-red-500 text-xs">{emailError}</label>
-      </div>
-      <br />
-      <div className="inputContainer flex flex-col items-start justify-center relative -top-6 border-2 border-[#07552A] p-3 rounded-lg">
-        <input
-          value={password}
-          placeholder="Enter your password here"
-          onChange={(ev) => setPassword(ev.target.value)}
-          className="outline-none w-full sm:w-80"
-        />
-        <label className="errorLabel text-red-500 text-xs">{passwordError}</label>
-      </div>
-      <br />
-      <div className="inputContainer flex flex-col items-center justify-center">
-        <input
-          className="inputButton bg-[#07522A] text-[#ECAB22] py-1 px-6 text-2xl shadow-2xl shadow-[#07552A] rounded-lg cursor-pointer w-28 h-11"
-          type="button"
-          onClick={(e)=>onButtonClick(e)}
-          value="Sign In"
-        />
-      </div>
-      <div className="signupContainer flex flex-col items-center justify-center mt-4">
-        <span className="text-[#ECAB22] text-sm">Don't have an account?</span>
-        <Link to="/register" className="text-[#fdc64e] text-sm hover:underline">Sign Up</Link>
-      </div>
-      </div>
-      </div>
+    </div>
   );
 };
 

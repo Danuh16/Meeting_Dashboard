@@ -5,11 +5,14 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Login from "./components/authentication/Login";
 import MySideBar from "./components/MysideBar";
 import MyProvider, { LoginStat } from "./context";
 import SignUp from "./components/authentication/Register"
+import Pin from "./components/addPin/Pin";
+import Dashboard from './components/adminPanel/Dashboard';
+import FilePreview from './components/addPin/file';
 
 const App = () => {
   return (
@@ -32,6 +35,9 @@ const Navigator = () => {
      <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<SignUp />} />
+      <Route path="/Dashboard" element={<Dashboard/>}/>
+      <Route path="/FilePreview" element={<FilePreview/>}/>
+      <Route path="/pin" element={<Pin />} />
       <Route
         path="/*"
         element={userId ? <MySideBar /> : <Navigate to="/login" />}

@@ -1,41 +1,43 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 
 const AddAttachment = ({ onCloseAddAttachment }) => {
   const [showModal, setShowModal] = useState(true);
-  const [event, setEvent] = useState("");
-  const [file, setFile] = useState("");
-  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      event: "",
+      file: "",
+    },
+    onSubmit: async () => {
+      try {
+        const formData = new FormData();
+        formData.append("event", formik.values.event);
+        formData.append("file", formik.values.file);
+    
+        const response = await fetch("https://gms.crosslightafrica.com/api/event/add_file/", {
+          method: "POST",
+          body: formData,
+        });
+    
+        if (response.ok) {
+          alert("Submission successful!");
+          handleCloseModal();
+        } else {
+          const data = await response.json();
+          alert("Submission failed: " + data.error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   const handleFileChange = (event) => {
-    if (event.target.files) {
+    if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      setFile(file);
+      formik.setFieldValue("file", file);
     } else {
       console.warn("No file selected yet.");
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://192.168.0.103:8000/api/event/add_room/",{
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ event, file }),
-        }
-      );
-
-      if (response.ok) {
-        navigate("/MysideBar");
-      } else {
-        const data = await response.json();
-        console.log(data.error);
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -58,7 +60,7 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
               Add Attachment
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={formik.handleSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
@@ -66,27 +68,26 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                 >
                   Events
                 </label>
-                <select
-                  id="schedule-for"
+                <input
+                  id="event"
+                  type="text"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                  value={event}
-                  onChange={(e) => setEvent(e.target.value)}
-                >
-                  <option value=""></option>
-                </select>
+                  onChange={formik.handleChange}
+                />
               </div>
               <div className="div">
                 <label
-                  htmlFor="File"
+                  htmlFor="file"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
                 >
                   File
                 </label>
                 <input
+                  id="file"
                   type="file"
                   onChange={(e) => {
-                    handleFileChange(event);
-                    setFile(e.target.value);
+                    formik.handleChange(e);
+                    handleFileChange(e);
                   }}
                 />
               </div>

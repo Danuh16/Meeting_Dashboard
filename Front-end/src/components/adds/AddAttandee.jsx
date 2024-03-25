@@ -1,44 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 
 const AddAttandee = ({ onCloseAddAttandee }) => {
-  const showModal = true;
-  const [event, setEvent] = useState("");
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch("http://192.168.0.103:8000/api/event/")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setEvent(data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://192.168.0.103:8000/api/event/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ event, email }),
-      });
-
-      if (response.ok) {
-        navigate("/MysideBar");
-      } else {
-        const data = await response.json();
-        console.log(data.error);
+ const [showModal, setShowModal] = useState(true);  
+  const formik = useFormik({
+    initialValues: {
+      event: "",
+      email: "",
+    },
+    onSubmit: async () => {
+      try {
+        const response = await fetch("http://192.168.0.104:8000/api/event/add_attendee/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event: formik.values.event,
+            email: formik.values.email,
+          }),
+        });
+    
+        if (response.ok) {
+          alert("Submission successful!");
+          handleCloseModal();
+        } else {
+          const data = await response.json();
+          alert("Submission failed: " + data.error);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    },
+  });
+
+  // useEffect(() => {
+  //   fetch("http://192.168.0.104:8000/api/event/event/")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       formik.setFieldValue("event", data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // }, []);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    onCloseAddAttandee();
   };
 
   return (
@@ -55,7 +65,7 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
               Add Attandee
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={formik.handleSubmit}>
               <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
@@ -63,27 +73,26 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
                 >
                   Events
                 </label>
-                <select
-                  id="schedule-for"
+                <input
+                  id="event"
+                  type="text"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                  value={event}
-                  onChange={(e) => setEvent(e.target.value)}
-                >
-                  <option></option>
-                </select>
+                  onChange={formik.handleChange}
+                />
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="email"
+                  htmlFor="event"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
+                  placeholder="example@abc.com"
                 >
                   Email
                 </label>
                 <input
                   id="email"
-                  type="email"
+                  type="text"
                   className="border border-[#07522A] rounded w-full py-2 px-3"
-                  onChange={(e) => setEmail({ ...email, name: e.target.value })}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="flex justify-end">
