@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiUserLine } from "react-icons/ri";
 import { FiFile, FiLogOut, FiSearch } from "react-icons/fi";
 import AddAttachment from "./adds/AddAttachement";
@@ -10,17 +10,26 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { BsGrid } from "react-icons/bs";
 import Calendar from "../components/calender/Calender";
 import Chart from "../components/chart/Chart";
+import { useNavigate } from "react-router-dom";
 
 const MysideBar = () => {
-  const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const token = userSession.access_token;
-  console.log(token);
-  const full_name = userSession.full_name;
   const [showAddMeeting, setShowAddMeeting] = useState(false);
   const [showAddAttachment, setShowAddAttachment] = useState(false);
   const [showAddAttandee, setShowAddAttandee] = useState(false);
-  // const [showAddRoom, setShowAddRoom] = useState(false);
   const [meetingObjects] = useState([]);
+  const navigate = useNavigate();
+  const [userSession, setUserSession] = useState(null);
+  const token = userSession?.access_token;
+  console.log(token);
+  const full_name = userSession?.full_name;
+
+  useEffect(() => {
+    const session = JSON.parse(localStorage.getItem("userSession"));
+    setUserSession(session);
+    if (!session) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   // const addObject = (newObject) => {
   //   setMeetingObjects([...meetingObjects, newObject]);
@@ -74,8 +83,7 @@ const MysideBar = () => {
           // body: JSON.stringify({ /* data */ }),
         }
       );
-
-      if (response.ok) {
+      if (response.ok || localStorage.getItem("userSession")) {
         console.log("Logout successful");
         localStorage.removeItem("userSession");
         window.location.href = "/login";
@@ -127,16 +135,8 @@ const MysideBar = () => {
             {showAddAttandee && (
               <AddAttandee onCloseAddAttandee={handleCloseAddAttandee} />
             )}
-
-            {/* <button
-              className="bg-[#FFFFFF2B] text-[#FFFFFF] relative right-9 flex gap-2 rounded-lg py-5 flex-shrink basis-full md:basis-auto ml-16 justify-center items-center font-bold text-lg"
-              onClick={handleAddRoom}
-            >
-              <FaHome className="mt-1 text-xl" /> Add Room
-            </button>
-            {showAddRoom && <AddRoom onCloseAddRoom={handleCloseAddRoom} />} */}
           </div>
-          <div className="text-[#FFFFFF] flex items-center gap-3  md:mt-[7rem] ml-[20%] md:ml-[3rem]  font-mono">
+          <div className="text-[#FFFFFF] flex items-center gap-3 md:mt-[7rem] ml-[20%] md:ml-[3rem]  font-mono">
             <FiLogOut style={{ width: "12%", height: "12%" }} />
             <button onClick={handleLogout}>Sign Out</button>
           </div>
@@ -175,10 +175,12 @@ const MysideBar = () => {
                     />
                   </div>
                   <div className="pt-1">
-                    <a href="/Pin"><AiOutlineUserAdd
-                      className="text-[#072E33] text-[20px] gap-6"
-                      size={24}
-                    /></a>
+                    <a href="/Pin">
+                      <AiOutlineUserAdd
+                        className="text-[#072E33] text-[20px] gap-6"
+                        size={24}
+                      />
+                    </a>
                   </div>
                   <div className="pt-1">
                     <BsGrid className="text-[#072E33] text-[20px]" size={24} />

@@ -14,7 +14,7 @@ const Login = () => {
       .email("Please enter a valid email")
       .required("Please enter your email"),
     password: Yup.string()
-      .min(8, "The password must be 8 characters or longer")
+      .min(6, "The password must be 8 characters or longer")
       .required("Please enter a password"),
   });
 
@@ -41,20 +41,19 @@ const Login = () => {
 
         if (response.ok) {
           console.log(data.is_superuser);
-          
+
           const userSession = {
             email: values.email,
             token: data.access_token,
             full_name: data.full_name,
           };
-        
+
           localStorage.setItem("userSession", JSON.stringify(userSession));
           setUserId(true);
-        
           if (data.is_superuser) {
-            navigate('/Dashboard ');
+            navigate("/Dashboard");
           } else {
-            navigate('/MysideBar');
+            navigate("/Admin");
           }
         } else {
           window.alert(data.detail);

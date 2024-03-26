@@ -1,31 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiUserLine } from "react-icons/ri";
 import { FiFile, FiLogOut, FiSearch } from "react-icons/fi";
-import AddAttachment from "./adds/AddAttachement";
-import AddAttandee from "./adds/AddAttandee";
-import AddMeeting from "./adds/AddMeeting";
-import logo from "../Assets/Logo.jpg";
-import profile from "../Assets/cutie.jpg";
+import AddAttachment from "../adds/AddAttachement";
+import AddAttandee from "../adds/AddAttandee";
+import AddMeeting from "../adds/AddMeeting";
+import logo from "../../Assets/Logo.jpg";
+import profile from "../../Assets/cutie.jpg";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { BsGrid } from "react-icons/bs";
-import Calendar from "../components/calender/Calender";
-import Chart from "../components/chart/Chart";
+import Calendar from "../calender/Calender";
+import { useNavigate } from "react-router-dom";
+import EventDetail from "./EventDetail";
 
-const MysideBar = () => {
-  const userSession = JSON.parse(localStorage.getItem("userSession"));
-  const token = userSession.access_token;
-  console.log(token);
-  const full_name = userSession.full_name;
+const Dashboard = ({ events }) => {
   const [showAddMeeting, setShowAddMeeting] = useState(false);
   const [showAddAttachment, setShowAddAttachment] = useState(false);
   const [showAddAttandee, setShowAddAttandee] = useState(false);
-  // const [showAddRoom, setShowAddRoom] = useState(false);
-  const [meetingObjects] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const navigate = useNavigate();
+  const [userSession, setUserSession] = useState(null);
+  const token = userSession?.access_token;
+  console.log(token);
+  const full_name = userSession?.full_name;
 
-  // const addObject = (newObject) => {
-  //   setMeetingObjects([...meetingObjects, newObject]);
-  //   console.log(meetingObjects);
-  // };
+  useEffect(() => {
+    const session = JSON.parse(localStorage.getItem("userSession"));
+    setUserSession(session);
+    if (!session) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const HandleAddMeeting = () => {
     setShowAddMeeting(true);
@@ -51,13 +55,13 @@ const MysideBar = () => {
     setShowAddAttandee(false);
   };
 
-  // const handleAddRoom = () => {
-  //   setShowAddRoom(true);
-  // };
+  const handleClick = (event) => {
+    setSelectedEvent(event);
+  };
 
-  // const handleCloseAddRoom = () => {
-  //   setShowAddRoom(false);
-  // };
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
 
   const handleLogout = async () => {
     try {
@@ -75,7 +79,7 @@ const MysideBar = () => {
         }
       );
 
-      if (response.ok) {
+      if (response.ok || localStorage.getItem("userSession")) {
         console.log("Logout successful");
         localStorage.removeItem("userSession");
         window.location.href = "/login";
@@ -127,14 +131,6 @@ const MysideBar = () => {
             {showAddAttandee && (
               <AddAttandee onCloseAddAttandee={handleCloseAddAttandee} />
             )}
-
-            {/* <button
-              className="bg-[#FFFFFF2B] text-[#FFFFFF] relative right-9 flex gap-2 rounded-lg py-5 flex-shrink basis-full md:basis-auto ml-16 justify-center items-center font-bold text-lg"
-              onClick={handleAddRoom}
-            >
-              <FaHome className="mt-1 text-xl" /> Add Room
-            </button>
-            {showAddRoom && <AddRoom onCloseAddRoom={handleCloseAddRoom} />} */}
           </div>
           <div className="text-[#FFFFFF] flex items-center gap-3  md:mt-[7rem] ml-[20%] md:ml-[3rem]  font-mono">
             <FiLogOut style={{ width: "12%", height: "12%" }} />
@@ -175,10 +171,12 @@ const MysideBar = () => {
                     />
                   </div>
                   <div className="pt-1">
-                    <a href="/Pin"><AiOutlineUserAdd
-                      className="text-[#072E33] text-[20px] gap-6"
-                      size={24}
-                    /></a>
+                    <a href="/Pin">
+                      <AiOutlineUserAdd
+                        className="text-[#072E33] text-[20px] gap-6"
+                        size={24}
+                      />
+                    </a>
                   </div>
                   <div className="pt-1">
                     <BsGrid className="text-[#072E33] text-[20px]" size={24} />
@@ -189,6 +187,27 @@ const MysideBar = () => {
               <div className="flex justify-between">
                 <Calendar />
               </div>
+              <div className="flex flex-col gap-4 p-4">
+                {events.map((event) => (
+                  <div
+                    key={event.id || event.fileUrl}
+                    className="border border-gray-200 rounded-lg p-4 flex items-center cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleClick(event)}
+                  >
+                    <p className="event-name">{event.name || event.pin}</p>
+                    <div className="event-time">
+                      <p>{event.startTime}</p>
+                      <p>{event.endTime}</p>
+                    </div>
+                    {selectedEvent?.id === event.id && (
+                      <div className="selected-indicator"></div>
+                    )}
+                  </div>
+                ))}
+                {selectedEvent && (
+                  <EventDetail event={selectedEvent} onClose={closeModal} />
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -197,4 +216,4 @@ const MysideBar = () => {
   );
 };
 
-export default MysideBar;
+export default Dashboard;

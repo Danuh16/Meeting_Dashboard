@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import logo from "../../Assets/Logo.jpg";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import FilePreview from './file';
 
 const Pin = () => {
-   const navigate = useNavigate()
-   const data = {
-    fileUrl: '' 
-  };
+  const navigate = useNavigate();
+  const [files, setFiles] = useState([]);
+  const [previewEnabled, setPreviewEnabled] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -28,10 +27,13 @@ const Pin = () => {
             }),
           }
         );
-        
+
         if (response.ok) {
           alert("Submission successful!");
-          navigate("/FilePreview")
+          const fetchedData = await response.json();
+          const files = fetchedData.map((item) => ({ fileUrl: item.fileUrlProperty })); 
+          setFiles(files);
+          setPreviewEnabled(true);
         } else {
           const data = await response.json();
           alert("Submission failed: " + data.error);
@@ -41,18 +43,6 @@ const Pin = () => {
       }
     },
   });
-
-  //  useEffect(() => {
-  //   fetch("http://192.168.0.104:8000/api/event/events/")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       formik.setFieldValue("pin", data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, []);
 
   return (
     <div className="container flex flex-col items-center justify-center h-screen bg-green-[#01160B]">
@@ -73,7 +63,7 @@ const Pin = () => {
               type="text"
               placeholder="Enter a pin"
               className="outline-none w-full sm:w-80"
-              value={formik.values.event}
+              value={formik.values.pin}
               onChange={formik.handleChange}
             />
           </div>
@@ -88,9 +78,7 @@ const Pin = () => {
           </div>
         </div>
       </form>
-      <div>
-      <FilePreview pinData={data} />
-      </div>
+      {previewEnabled && <FilePreview files={files} />} 
     </div>
   );
 };

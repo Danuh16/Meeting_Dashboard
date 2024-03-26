@@ -14,17 +14,27 @@ export function useApp() {
   const channelsData = React.useMemo(() => channels, [channels]);
   const epgData = React.useMemo(() => epg, [epg]);
 
+  const getDynamicStartDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0] + "T00:00:00";
+  };
+
+  const getDynamicEndDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0] + "T24:00:00";
+  };
+
   const { getEpgProps, getLayoutProps } = useEpg({
     channels: channelsData,
     epg: epgData,
     dayWidth: 7200,
-    sidebarWidth: 250,
+    // sidebarWidth: 250,
     itemHeight: 80,
     // isSidebar: true,
     isTimeline: true,
     isLine: true,
-    startDate: "2024-03-25T00:00:00",
-    endDate: "2024-03-25T24:00:00",
+    startDate: getDynamicStartDate(),
+    endDate: getDynamicEndDate(),
     isBaseTimeFormat: true,
     theme,
   });
@@ -77,10 +87,6 @@ const Chart = () => {
 
   const [showAddMeeting, setShowAddMeeting] = useState(false);
 
-  // const HandleAddMeeting = () => {
-  //   setShowAddMeeting(true);
-  // };
-
   const handleCloseAddMeeting = () => {
     setShowAddMeeting(false);
   };
@@ -98,7 +104,7 @@ const Chart = () => {
   };
 
   return (
-    <div className="container flex flex-col rounded-lg  items-center">
+    <div className="container flex flex-col rounded-lg h-64 items-center">
       <Epg isLoading={isLoading} {...getEpgProps()}>
         <Layout
           {...getLayoutProps()}
