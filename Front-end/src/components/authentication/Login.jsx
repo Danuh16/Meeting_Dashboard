@@ -14,7 +14,7 @@ const Login = () => {
       .email("Please enter a valid email")
       .required("Please enter your email"),
     password: Yup.string()
-      .min(6, "The password must be 8 characters or longer")
+      .min(6, "The password must be 6 characters or longer")
       .required("Please enter a password"),
   });
 
@@ -27,7 +27,7 @@ const Login = () => {
     onSubmit: async (values) => {
       try {
         const response = await fetch(
-          "https://gms.crosslightafrica.com/api/v/auth/login/",
+          "http://172.20.10.6:8000/api/v/auth/login/",
           {
             method: "POST",
             headers: {
@@ -44,7 +44,8 @@ const Login = () => {
 
           const userSession = {
             email: values.email,
-            token: data.access_token,
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
             full_name: data.full_name,
           };
 

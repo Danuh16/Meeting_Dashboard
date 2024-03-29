@@ -10,6 +10,8 @@ export function useApp() {
   const [channels, setChannels] = useState([]);
   const [epg, setEpg] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const access_token = userSession?.access_token;
 
   const channelsData = React.useMemo(() => channels, [channels]);
   const epgData = React.useMemo(() => epg, [epg]);
@@ -38,11 +40,36 @@ export function useApp() {
     isBaseTimeFormat: true,
     theme,
   });
-
-  const fetchEpg = async () => {
+  const deleteProgram = async (programId) => {
     try {
       const response = await fetch(
-        "https://gms.crosslightafrica.com/api/event/today-events/"
+        `http://172.20.10.6:8000/api/event/delete/${programId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const updatedEpg = epg.filter((program) => program.id !== programId);
+        setEpg(updatedEpg);
+      } else {
+        throw new Error("Failed to delete program");
+      }
+    } catch (error) {
+      console.error("Error deleting program:", error);
+    }
+  };
+
+  const fetchEpg = async (date) => {
+    try {
+      const response = await fetch(
+        `http://172.20.10.6:8000/api/event/events-by-date?date=${date
+          .toISOString()
+          .slice(0, 10)}`
       );
       const data = await response.json();
 
@@ -64,10 +91,20 @@ export function useApp() {
 
   const handleFetchResources = React.useCallback(async () => {
     setIsLoading(true);
-    const epg = await fetchEpg();
+    const today = new Date();
+    const prevDates = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(today.getDate() - i);
+      return date;
+    });
+
+    const epgData = await Promise.all(prevDates.map((date) => fetchEpg(date)));
+    const flattenedEpg = epgData.reduce((acc, curr) => [...acc, ...curr], []);
+    setEpg(flattenedEpg);
+
     const channels = await fetchChannels();
-    setEpg(epg);
     setChannels(channels);
+
     setIsLoading(false);
   }, []);
 
@@ -79,16 +116,39 @@ export function useApp() {
     handleFetchResources();
   }, [handleFetchResources]);
 
-  return { getEpgProps, getLayoutProps, addMeetingToEpg, isLoading };
+  return {
+    getEpgProps,
+    getLayoutProps,
+    addMeetingToEpg,
+    isLoading,
+    deleteProgram,
+    epg,
+  };
 }
 
-const Chart = () => {
-  const { isLoading, getEpgProps, getLayoutProps, addMeetingToEpg } = useApp();
+const Chart = ({ selectedDate }) => {
+  const {
+    isLoading,
+    getEpgProps,
+    getLayoutProps,
+    addMeetingToEpg,
+    deleteProgram,
+    epg,
+  } = useApp();
 
   const [showAddMeeting, setShowAddMeeting] = useState(false);
 
   const handleCloseAddMeeting = () => {
     setShowAddMeeting(false);
+  };
+
+  const handleDeleteProgram = async (programId) => {
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this program?"
+    );
+    if (confirmation) {
+      await deleteProgram(programId);
+    }
   };
 
   const renderChannel = ({ channel }) => {
@@ -103,6 +163,14 @@ const Chart = () => {
     );
   };
 
+  const filteredEpg = React.useMemo(() => {
+    if (!selectedDate) return epg;
+    return epg.filter((program) => {
+      const programDate = new Date(program.since).toISOString().slice(0, 10);
+      return programDate === selectedDate.toISOString().slice(0, 10);
+    });
+  }, [epg, selectedDate]);
+
   return (
     <div className="container flex flex-col rounded-lg h-64 items-center">
       <Epg isLoading={isLoading} {...getEpgProps()}>
@@ -110,7 +178,12 @@ const Chart = () => {
           {...getLayoutProps()}
           renderTimeline={(props) => <Timeline {...props} />}
           renderProgram={({ program, ...rest }) => (
-            <ProgramItem key={program.data.id} program={program} {...rest} />
+            <ProgramItem
+              key={program.data.id}
+              program={program}
+              onDelete={() => handleDeleteProgram(program.data.title)}
+              {...rest}
+            />
           )}
           renderChannel={renderChannel}
         />
@@ -121,6 +194,11 @@ const Chart = () => {
             onCloseAddMeeting={handleCloseAddMeeting}
             addMeetingToEpg={addMeetingToEpg}
           />
+        </div>
+      )}
+      {selectedDate && (
+        <div className="mt-4">
+          <pre>{JSON.stringify(filteredEpg, null, 2)}</pre>
         </div>
       )}
     </div>

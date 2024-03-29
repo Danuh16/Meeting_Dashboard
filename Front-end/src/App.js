@@ -2,10 +2,9 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
   Navigate,
 } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Login from "./components/authentication/Login";
 import MySideBar from "./components/MysideBar";
 import MyProvider, { LoginStat } from "./context";
@@ -23,23 +22,33 @@ const App = () => {
     </MyProvider>
   );
 };
+
 const Navigator = () => {
   const { userId } = LoginStat();
-  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(false);
+
   useEffect(() => {
-    if (!userId && !localStorage.getItem("userSession")) {
-      navigate("/");
+    const userSession = localStorage.getItem("userSession");
+    if (userId || userSession) {
+      setAuthenticated(true);
+    } else {
+      setAuthenticated(false);
     }
-  }, [userId, navigate]);
+  }, [userId]);
+
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route
+        path="/"
+        element={authenticated ? <Navigate to="/Admin" /> : <Login />}
+      />
       <Route path="/register" element={<SignUp />} />
-      <Route path="/Dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/Admin" element={<MySideBar />} />
       <Route path="/FilePreview" element={<FilePreview />} />
       <Route path="/pin" element={<Pin />} />
     </Routes>
   );
 };
+
 export default App;

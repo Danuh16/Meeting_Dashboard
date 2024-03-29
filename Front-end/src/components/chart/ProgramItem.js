@@ -9,7 +9,7 @@ import {
   useProgram
 } from "planby";
 
-export const ProgramItem = ({ program, ...rest }) => {
+export const ProgramItem = ({ program, onDelete, ...rest }) => {
   const {
     styles,
     formatTime,
@@ -24,6 +24,7 @@ export const ProgramItem = ({ program, ...rest }) => {
   const { data } = program;
   const { image, title, since, till } = data;
 
+  const sinceDate = new Date(since).toISOString().split("T")[0];
   const sinceTime = formatTime(since, set12HoursTimeFormat()).toLowerCase();
   const tillTime = formatTime(till, set12HoursTimeFormat()).toLowerCase();
 
@@ -33,9 +34,10 @@ export const ProgramItem = ({ program, ...rest }) => {
         <ProgramFlex>
           {isLive && isMinWidth && <ProgramImage src={image} alt="Preview" />}
           <ProgramStack>
-            <ProgramTitle>{title}</ProgramTitle>
+            <ProgramTitle>{title} <button onClick={onDelete} className="ml-3 p-2 -mt-2 bg-[#2b4d52] font-extrabold rounded-full">Delete</button></ProgramTitle>
             <ProgramText>
-              {sinceTime} - {tillTime}
+            {sinceDate}: {sinceTime} - {tillTime}
+            
             </ProgramText>
           </ProgramStack>
         </ProgramFlex>

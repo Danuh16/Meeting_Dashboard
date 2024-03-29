@@ -6,9 +6,20 @@ import { IoCalendarOutline } from "react-icons/io5";
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [dateData, setDateData] = useState(null);
+  
 
-  const handleDateClick = (date) => {
+  const handleDateClick = async (date) => {
     setSelectedDate(date);
+    try {
+      const response = await fetch(
+        `/api/date-data?date=${date.toISOString().slice(0, 10)}`
+      );
+      const data = await response.json();
+      setDateData(data);
+    } catch (error) {
+      console.error("Error fetching date data:", error);
+    }
   };
 
   const handlePrevMonth = () => {
@@ -116,7 +127,9 @@ const Calendar = () => {
     return (
       <div className="container flex flex-col">
         <div className="calendar-container overflow-x-auto hide-scrollbar">
-          <div className="flex items-center justify-center gap-4">{days}</div>
+          <div className="flex items-center justify-center gap-4">
+            {days}
+          </div>
         </div>
       </div>
     );

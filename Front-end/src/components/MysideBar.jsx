@@ -20,7 +20,6 @@ const MysideBar = () => {
   const navigate = useNavigate();
   const [userSession, setUserSession] = useState(null);
   const token = userSession?.access_token;
-  console.log(token);
   const full_name = userSession?.full_name;
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const MysideBar = () => {
       const token = userSession.access_token;
       console.log(token);
       const response = await fetch(
-        "https://gms.crosslightafrica.com/api/v/auth/logout/",
+        "http://172.20.10.6:8000/api/v/auth/logout/",
         {
           method: "POST",
 
@@ -86,7 +85,7 @@ const MysideBar = () => {
       if (response.ok || localStorage.getItem("userSession")) {
         console.log("Logout successful");
         localStorage.removeItem("userSession");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         console.error("Logout failed");
       }
@@ -148,7 +147,7 @@ const MysideBar = () => {
                 {/* profile */}
                 <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
                   <img
-                    src={profile}
+                    src={logo}
                     alt=""
                     className="h-11 w-11 rounded-full"
                   />

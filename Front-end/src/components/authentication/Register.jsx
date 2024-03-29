@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import logo from "../../Assets/Logo.jpg";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required("Please enter your first name"),
@@ -33,7 +34,7 @@ const SignUp = () => {
     onSubmit: async (values) => {
       try {
         const response = await fetch(
-          "https://gms.crosslightafrica.com/api/v/auth/register/",
+          "http://172.20.10.6:8000/api/v/auth/register/",
           {
             method: "POST",
             headers: {
@@ -44,7 +45,7 @@ const SignUp = () => {
         );
 
         if (response.ok) {
-          navigate("/login");
+          navigate("/");
           const data = await response.json();
           console.log(data.message)
         } else {
@@ -157,7 +158,7 @@ const SignUp = () => {
           <span className="text-[#ECAB22] text-sm">
             Already have an account?
           </span>
-          <a href="/login" className="text-[#07522A] text-sm hover:underline">
+          <a href="/" className="text-[#07522A] text-sm hover:underline">
             Sign In
           </a>
         </div>

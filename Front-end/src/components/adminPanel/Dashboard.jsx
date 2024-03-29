@@ -5,18 +5,16 @@ import AddAttachment from "../adds/AddAttachement";
 import AddAttandee from "../adds/AddAttandee";
 import AddMeeting from "../adds/AddMeeting";
 import logo from "../../Assets/Logo.jpg";
-import profile from "../../Assets/cutie.jpg";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { BsGrid } from "react-icons/bs";
 import Calendar from "../calender/Calender";
 import { useNavigate } from "react-router-dom";
-import EventDetail from "./EventDetail";
 
-const Dashboard = ({ events }) => {
+const Dashboard = () => {
   const [showAddMeeting, setShowAddMeeting] = useState(false);
   const [showAddAttachment, setShowAddAttachment] = useState(false);
   const [showAddAttandee, setShowAddAttandee] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentPage, setCurrentPage] = useState('');
   const navigate = useNavigate();
   const [userSession, setUserSession] = useState(null);
   const token = userSession?.access_token;
@@ -55,20 +53,21 @@ const Dashboard = ({ events }) => {
     setShowAddAttandee(false);
   };
 
-  const handleClick = (event) => {
-    setSelectedEvent(event);
-  };
-
-  const closeModal = () => {
-    setSelectedEvent(null);
-  };
+  const headers = [
+    "Title",
+    "Planed For",
+    "Closed At",
+    "Participants",
+    "Shared File",
+  ];
+  const [events, setEvents] = useState([]);
 
   const handleLogout = async () => {
     try {
       const token = userSession.access_token;
       console.log(token);
       const response = await fetch(
-        "https://gms.crosslightafrica.com/api/v/auth/logout/",
+        "http://172.20.10.6:8000/api/v/auth/logout/",
         {
           method: "POST",
 
@@ -82,7 +81,7 @@ const Dashboard = ({ events }) => {
       if (response.ok || localStorage.getItem("userSession")) {
         console.log("Logout successful");
         localStorage.removeItem("userSession");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         console.error("Logout failed");
       }
@@ -90,6 +89,22 @@ const Dashboard = ({ events }) => {
       console.error("An error occurred:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(
+          "http://172.20.10.6:8000/api/event/admin/"
+        );
+        const data = await response.json();
+        setEvents(data);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="container mx-auto">
@@ -141,10 +156,9 @@ const Dashboard = ({ events }) => {
           <div className="container p-8">
             <div className="flex flex-col gap-10">
               <div className="flex justify-between flex-wrap">
-                {/* profile */}
                 <div className="flex flex-1 gap-3 md:flex-row sm:flex-col ">
                   <img
-                    src={profile}
+                    src={logo}
                     alt=""
                     className="h-11 w-11 rounded-full"
                   />
@@ -187,26 +201,57 @@ const Dashboard = ({ events }) => {
               <div className="flex justify-between">
                 <Calendar />
               </div>
-              <div className="flex flex-col gap-4 p-4">
-                {events.map((event) => (
-                  <div
-                    key={event.id || event.fileUrl}
-                    className="border border-gray-200 rounded-lg p-4 flex items-center cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleClick(event)}
-                  >
-                    <p className="event-name">{event.name || event.pin}</p>
-                    <div className="event-time">
-                      <p>{event.startTime}</p>
-                      <p>{event.endTime}</p>
+              <div className="container rounded-lg flex flex-col gap-2 p-2 table-fixed md:table-fixed bg-white">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        {headers.map((header) => (
+                          <th
+                            key={header}
+                            className="px-4 py-2 bg-gray-100 font-bold text-[#072E33]"
+                          >
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {events.slice(0, 5).map((row, index) => (
+                        <tr
+                          key={index}
+                          className={`${
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          } hover:bg-gray-100 transition-colors duration-300`}
+                        >
+                          <td className="px-4 py-3">{row.Title}</td>
+                          <td className="px-4 py-3">{row.Room}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {events.length > 5 && (
+                    <div className="flex justify-center mt-4">
+                      <div className="btn-group">
+                        {[...Array(Math.ceil(events.length / 5)).keys()].map(
+                          (page) => (
+                            <button
+                              key={page}
+                              className={`btn btn-sm ${
+                                page * 5 === 0
+                                  ? "bg-[#072E33] text-white"
+                                  : "bg-white text-[#072E33]"
+                              }`}
+                              onClick={() => setCurrentPage(page)}
+                            >
+                              {page + 1}
+                            </button>
+                          )
+                        )}
+                      </div>
                     </div>
-                    {selectedEvent?.id === event.id && (
-                      <div className="selected-indicator"></div>
-                    )}
-                  </div>
-                ))}
-                {selectedEvent && (
-                  <EventDetail event={selectedEvent} onClose={closeModal} />
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>

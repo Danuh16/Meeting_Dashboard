@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 
 const AddAttachment = ({ onCloseAddAttachment }) => {
   const [showModal, setShowModal] = useState(true);
+  const [events, setEvents] = useState([]);
   const formik = useFormik({
     initialValues: {
       event: "",
@@ -14,7 +15,7 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
         formData.append("event", formik.values.event);
         formData.append("file", formik.values.file);
     
-        const response = await fetch("https://gms.crosslightafrica.com/api/event/add_file/", {
+        const response = await fetch("http://172.20.10.6:8000/api/event/add_file/", {
           method: "POST",
           body: formData,
         });
@@ -31,6 +32,19 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
       }
     },
   });
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://172.20.10.6:8000/api/event/shared/");
+        const data = await response.json();
+        setEvents(data.events);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -53,27 +67,34 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
           <div className="relative w-full max-w-md mx-4 bg-white rounded-lg p-6">
             <button
               onClick={handleCloseModal}
-              className="absolute top-0 right-0 rounded-full p-2 text-[#ECAB22] hover:text-red-500"
+              className="absolute top-0 right-0 rounded-full p-2 text-[#04492C] hover:text-red-500"
             >
               X
             </button>
-            <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
-              Add Attachment
+            <h2 className="text-lg text-[#01200E] font-bold mb-4">
+              Share Files
             </h2>
             <form onSubmit={formik.handleSubmit}>
-              <div className="mb-4">
+            <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
-                  className="block text-[#ECAB22] text-sm font-bold mb-2"
+                  className="block text-[#011806] text-sm font-bold mb-2"
                 >
-                  Events
+                  Choose Event
                 </label>
-                <input
+                <select
                   id="event"
-                  type="text"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
                   onChange={formik.handleChange}
-                />
+                  value={formik.values.event}
+                >
+                  <option value="No Event ">Select Event</option>  {/* Option for no selection */}
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.name}  
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="div">
                 <label
@@ -96,7 +117,7 @@ const AddAttachment = ({ onCloseAddAttachment }) => {
                   type="submit"
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
-                  Submit
+                  Add File
                 </button>
               </div>
             </form>

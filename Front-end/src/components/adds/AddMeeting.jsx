@@ -5,8 +5,10 @@ import dayjs from 'dayjs';
 
 const AddMeeting = ({ onCloseAddMeeting }) => {
   const [showModal, setShowModal] = useState(true);
+  const userSession = JSON.parse(localStorage.getItem("userSession"));
+  const access_token = userSession?.access_token;
   const formik = useFormik({
-    initialValues: {host: '', room:'', name:'', Pin:'', start_time:'', end_time:''},
+    initialValues: {room:1 , name:'', Pin:'', start_time:'', end_time:''},
     onSubmit: ()=>{
       formik.setFieldValue('start_time', dayjs(formik.values.start_time).format('YYYY-MM-DDTHH:mm:ss.SSSZ'))
       formik.setFieldValue('end_time', dayjs(formik.values.end_time).format('YYYY-MM-DDTHH:mm:ss.SSSZ'))
@@ -16,10 +18,11 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
 
   const addObject = async () => {
     try {
-      const response = await fetch("https://gms.crosslightafrica.com/api/event/add_event/",{
+      const response = await fetch("http://172.20.10.6:8000/api/event/add_event/",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
           },
           body: JSON.stringify(formik.values),
         }
@@ -56,69 +59,16 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
             </button>
 
             <h2 className="text-lg text-[#ECAB22] font-mono font-bold mb-4">
-              Add Meeting
+              Schedule Meeting
             </h2>
 
             <form>
               <div className="mb-4">
                 <label
-                  htmlFor="schedule-for"
-                  className="block text-[#ECAB22] text-sm font-bold mb-2"
-                >
-                  Host
-                </label>
-                <input
-                  id="host"
-                  name="host"
-                  value={formik.values.host}
-                  onChange={formik.handleChange}
-                  className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                />
-                  {/* <option value=""></option>
-                  <option value="">Mobile App</option>
-                  <option value="">Infography</option>
-                  <option value="">Wireframes</option>
-                  <option value="">Team Management</option>
-                </select> */}
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="room"
-                  className="block text-[#ECAB22] text-sm font-bold mb-2"
-                >
-                  Room
-                </label>
-                <input
-                  id="room"
-                  value={formik.values.room}
-                  onChange={formik.handleChange}
-                  className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
-                />
-                  {/* <option value=""></option>
-                  <option value="16fdfefe-e466-4090-bc1a-57c43937f826">
-                    Mobile App
-                  </option>
-                  <option value="96aaf72c-b5ed-4ce4-937d-1912e4f8bf0d">
-                    Designs
-                  </option>
-                  <option value="06d3366b-9ec2-46e8-a741-df3ee1abeed7">
-                    Infography
-                  </option>
-                  <option value="b51689be-8eb4-4481-b208-6bbcb7fb47c2">
-                    Wireframes
-                  </option>
-                  <option value="b51689be-8eb4-4481-b208-6bbcb7fb47c3">
-                    Team Management
-                  </option>
-                </select> */}
-              </div>
-
-              <div className="mb-4">
-                <label
                   htmlFor="name"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
                 >
-                  Meeting Name
+                  Meeting Title
                 </label>
                 <input
                   id="name"
@@ -134,7 +84,7 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
                   htmlFor="Pin"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
                 >
-                  Pin
+                  File Access Pin
                 </label>
                 <input
                   id="Pin"
@@ -185,7 +135,7 @@ const AddMeeting = ({ onCloseAddMeeting }) => {
                   }}
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
-                  + Add
+                  + Schedule
                 </button>
               </div>
             </form>

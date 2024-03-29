@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
 import logo from "../../Assets/Logo.jpg";
 import { useFormik } from "formik";
+import FilePreview from "./file";
 import { useNavigate } from "react-router-dom";
-import FilePreview from './file';
 
 const Pin = () => {
   const navigate = useNavigate();
@@ -12,28 +12,27 @@ const Pin = () => {
   const formik = useFormik({
     initialValues: {
       pin: "",
+      pon: 0,
     },
     onSubmit: async () => {
       try {
         const response = await fetch(
-          "https://gms.crosslightafrica.com/api/event/events/",
+          "http://172.20.10.6:8000/api/event/events/",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              pin: formik.values.pin,
-            }),
+            body: JSON.stringify(formik.values),
           }
         );
 
         if (response.ok) {
           alert("Submission successful!");
-          const fetchedData = await response.json();
-          const files = fetchedData.map((item) => ({ fileUrl: item.fileUrlProperty })); 
-          setFiles(files);
+          const data = await response.json();
+          setFiles(data.files);
           setPreviewEnabled(true);
+          navigate('/FilePreview');
         } else {
           const data = await response.json();
           alert("Submission failed: " + data.error);
@@ -60,7 +59,7 @@ const Pin = () => {
           <div className="inputContainer flex flex-col items-start justify-center relative -top-6 border-2 border-[#07552A] p-3 rounded-lg">
             <input
               id="pin"
-              type="text"
+              type="number"
               placeholder="Enter a pin"
               className="outline-none w-full sm:w-80"
               value={formik.values.pin}
@@ -78,7 +77,7 @@ const Pin = () => {
           </div>
         </div>
       </form>
-      {previewEnabled && <FilePreview files={files} />} 
+      {previewEnabled && <FilePreview files={files} />}
     </div>
   );
 };

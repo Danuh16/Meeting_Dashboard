@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 
 const AddAttandee = ({ onCloseAddAttandee }) => {
- const [showModal, setShowModal] = useState(true);  
+ const [showModal, setShowModal] = useState(true);
+ const [events, setEvents] = useState([]);  
   const formik = useFormik({
     initialValues: {
       event: "",
@@ -10,7 +11,7 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
     },
     onSubmit: async () => {
       try {
-        const response = await fetch("http://192.168.0.104:8000/api/event/add_attendee/", {
+        const response = await fetch("http://172.20.10.6:8000/api/event/add_attendee/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -34,17 +35,20 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
     },
   });
 
-  // useEffect(() => {
-  //   fetch("http://192.168.0.104:8000/api/event/event/")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       formik.setFieldValue("event", data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, []);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://172.20.10.6:8000/api/event/shared/");
+        const data = await response.json();
+        setEvents(data.events); 
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -63,28 +67,35 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
               X
             </button>
             <h2 className="text-lg text-[#ECAB22] font-bold mb-4">
-              Add Attandee
+              Add Participants
             </h2>
             <form onSubmit={formik.handleSubmit}>
-              <div className="mb-4">
+            <div className="mb-4">
                 <label
                   htmlFor="schedule-for"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
                 >
-                  Events
+                  Choose Event
                 </label>
-                <input
+                <select
                   id="event"
-                  type="text"
                   className="border border-[#07522A] text-[#ECAB22] rounded w-full py-2 px-3"
                   onChange={formik.handleChange}
-                />
+                  value={formik.values.event}
+                >
+                  <option value="No Event ">Select Event</option>  {/* Option for no selection */}
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.name}  
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label
                   htmlFor="event"
                   className="block text-[#ECAB22] text-sm font-bold mb-2"
-                  placeholder="example@abc.com"
+                  placeholder="example@abc.com, example2@abc.com (coma separated Emails)"
                 >
                   Email
                 </label>
@@ -100,7 +111,7 @@ const AddAttandee = ({ onCloseAddAttandee }) => {
                   type="submit"
                   className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
                 >
-                  Submit
+                  ADD Participants
                 </button>
               </div>
             </form>

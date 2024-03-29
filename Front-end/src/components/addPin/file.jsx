@@ -1,53 +1,68 @@
-import React, { useState } from 'react';
+import React,{ useEffect, useState} from "react";
 
-const FilePreview = ({ files }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const handlePreviewClick = (index) => {
-    setSelectedIndex(index);
+
+const FilePreview = () => {
+  const [files, setFiles] = useState([]); 
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("http://172.20.10.6:8000/api/event/events/");
+        const data = await response.json();
+        setFiles(data.files); 
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+  
+    fetchEvents();
+  }, []);
+  function extractFilename(url) {
+    // Split the URL by the last forward slash (/)
+    const parts = url.split("/");
+    // Return the last element (assuming it's the filename)
+    return parts[parts.length - 1];
+  }
+
+  const handleDownload = (file) => {
+    const link = document.createElement("a");
+    link.href = file;
+    link.download = file.substring(file.lastIndexOf("/") + 1);
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.click();
   };
-
-  const previewContent = (file) => {
-    const fileExtension = file.fileUrl.split(".").pop().toLowerCase();
-
-    if (fileExtension === "pdf") {
-      return (
-        <div className="preview-box flex absolute top-60 -left-[6rem] justify-center h-[25rem] w-full">
-          <embed src={file.fileUrl} type="application/pdf"  />
+  console.log(files,"###")
+  
+  if (!files) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="bg-white shadow-lg rounded-lg p-8 shadow-[#07522A] mt-5">
+          <p className="text-[#072E33] text-center font-extrabold">
+            No files available.
+          </p>
         </div>
-      );
-    } else if (fileExtension.match(/(png|jpe?g|gif)$/)) {
-      return (
-        <div className="preview-box flex absolute -left-[6rem] top-24 justify-center h-[25rem] w-[55rem]">
-          <img src={file.fileUrl} alt="Preview" />
-        </div>
-      );
-    } else {
-      return (
-        <div className="preview-box flex absolute left-[18rem] top-[38rem] justify-center h-[20rem] w-[55rem]">
-          <p>Preview not available for this file type.</p>
-        </div>
-      );
-    }
-  };
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-wrap gap-4">
-    {files.map((file, index) => (
-      <div key={index}>
-        <button
-          onClick={() => handlePreviewClick(index)}
-          className="bg-white p-4 relative left-[0rem] top-5 cursor-pointer text-[#072e33] text-lg rounded-2xl shadow-xl shadow-[#2e533f] font-bold flex items-center justify-center"
-        >
-          Preview
-        <a href={file.fileUrl} download target="_blank" rel="noopener noreferrer">
-          : Download
-        </a>
-        </button>
-        {selectedIndex === index && previewContent(file)}
+    <div className="flex justify-center">
+      <div className="max-w-lg w-full bg-white shadow-md p-4 rounded-md">
+        <h2 className="text-lg font-bold mb-4">Files:</h2>
+        {files.map((file) => (
+          <div key={file.id} className="flex items-center mb-2">
+            <button
+              onClick={() => handleDownload(file.file)}
+              className="bg-[#07522A] hover:bg-[#71e1a5] text-[#ECAB22] font-bold py-2 px-4 rounded"
+            >
+              {extractFilename(file.file)}
+            </button>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
+    </div>
   );
 };
 
